@@ -13,6 +13,8 @@ namespace Clyde.Rbi.TeamBuildTray
         private readonly Collection<TeamProject> projects = new Collection<TeamProject>();
         public string ServerName { get; set; }
         public int Port { get; set; }
+        public string Protocol { get; set; }
+
         public static readonly int IntervalTimeInSeconds = 5;
         private Timer queryTimer;
 
@@ -133,7 +135,7 @@ namespace Clyde.Rbi.TeamBuildTray
 
         private EndpointAddress GetEndpointAddress()
         {
-            return new EndpointAddress(new Uri("http://" + ServerName + ":" + Port + "/build/v2.0/buildservice.asmx"));
+            return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port + "/build/v2.0/buildservice.asmx"));
         }
 
         private BuildQueryEventArgs QueryBuilds(IEnumerable<BuildDefinition> buildDefinitions)

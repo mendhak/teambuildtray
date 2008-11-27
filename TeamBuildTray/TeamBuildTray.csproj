@@ -113,6 +113,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="FirstRunConfiguration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Window1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -131,6 +135,9 @@
     <Compile Include="BuildQueryEventArgs.cs" />
     <Compile Include="BuildStatusConverter.cs" />
     <Compile Include="BuildVisibilityConverter.cs" />
+    <Compile Include="FirstRunConfiguration.xaml.cs">
+      <DependentUpon>FirstRunConfiguration.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IconColour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

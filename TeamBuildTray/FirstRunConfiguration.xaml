@@ -1,0 +1,16 @@
+﻿<Window x:Class="Clyde.Rbi.TeamBuildTray.FirstRunConfiguration"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add a Team Foundation Server" Height="200" Width="323" Name="FirstRunConfigurationWindow" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Height="163" Width="305">
+        <Label Height="28" Margin="9,12,102,0" Name="LabelServerName" VerticalAlignment="Top">Team Foundation Server name:</Label>
+        <TextBox Height="23" Margin="21,37,12,0" Name="textBox1" VerticalAlignment="Top" />
+        <Label Height="28" Margin="12,66,0,0" Name="LabelPortNumber" VerticalAlignment="Top" HorizontalAlignment="Left" Width="35">Port:</Label>
+        <TextBox Height="23" Margin="53,66,0,0" Name="textBox2" VerticalAlignment="Top" HorizontalAlignment="Left" Width="63">8080</TextBox>
+        <Label Margin="12,100,0,0" Name="LabelProtocol" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" Width="57">Protocol:</Label>
+        <RadioButton Margin="75,105,0,0" Name="RadioButtonHttp" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53">http</RadioButton>
+        <RadioButton Height="16" Margin="134,0,121,42" Name="RadioButtonHttps" VerticalAlignment="Bottom">https</RadioButton>
+        <Button Height="23" Margin="137,0,93,13" Name="ButtonSave" VerticalAlignment="Bottom" Click="ButtonSave_Click">Save</Button>
+        <Button Height="23" Margin="0,0,12,13" Name="ButtonCancel" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="ButtonCancel_Click">Cancel</Button>
+    </Grid>
+</Window>

@@ -98,28 +98,26 @@ namespace Clyde.Rbi.TeamBuildTray
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(List<TeamServer>));
-                    FileStream fs = File.OpenRead(serverConfigurationPath);
-                    servers = serializer.Deserialize(fs) as List<TeamServer>;
-                    fs.Close();
+                    servers = GetServersFromConfigurationFile();
 
-                    if (servers == null)
+                    if (servers == null || servers.Count == 0)
                     {
-                        servers = new List<TeamServer>();
+                        RunConfigurationWindow();
+                        servers = GetServersFromConfigurationFile();
                     }
                 }
                 catch (Exception)
                 {
+
                     servers = new List<TeamServer>();
                 }
             }
             else
             {
-                servers = new List<TeamServer>();
 
-                TeamServer ts = new TeamServer { Port = 8080, ServerName = "rbiqhsappp007v" };
-                ts.Projects.Add(new TeamProject { ProjectName = "Jobs" });
-                servers.Add(ts);
+                RunConfigurationWindow();
+                servers = GetServersFromConfigurationFile();
+
             }
 
             //Add servers to menu
@@ -138,6 +136,33 @@ namespace Clyde.Rbi.TeamBuildTray
             LoadHiddenBuilds();
 
             InitializeServers();
+        }
+
+        /// <summary>
+        /// Runs the first-run configuration window which lets the user specify a server to connect to.
+        /// </summary>
+        private void RunConfigurationWindow()
+        {
+            FirstRunConfiguration firstRun = new FirstRunConfiguration();
+            bool? firstRunHasRun = firstRun.ShowDialog();
+
+            //If the user pressed cancel or closed the window, don't let them continue.
+            if (firstRunHasRun.HasValue && firstRunHasRun.Value == false)
+            {
+                firstRun = null;
+                this.Close();
+                Environment.Exit(0);
+            }   
+        }
+
+
+        private List<TeamServer> GetServersFromConfigurationFile()
+        {
+            var serializer = new XmlSerializer(typeof(List<TeamServer>));
+            FileStream fs = File.OpenRead(serverConfigurationPath);
+            List<TeamServer> teamServers = serializer.Deserialize(fs) as List<TeamServer>;
+            fs.Close();
+            return teamServers;
         }
 
         private static void LoadHiddenBuilds()
