@@ -17,7 +17,7 @@ using TeamBuildTray.Resources;
 
 namespace TeamBuildTray
 {
-    public partial class Window1
+    public partial class MainBuildList
     {
         private readonly NotifierWindow notifierWindow;
 
@@ -46,7 +46,7 @@ namespace TeamBuildTray
             }
         }
 
-        public Window1()
+        public MainBuildList()
         {
             InitializeComponent();
             SetIcon(IconColour.Grey);

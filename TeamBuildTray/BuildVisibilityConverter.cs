@@ -13,9 +13,9 @@ namespace TeamBuildTray
                               object parameter, CultureInfo culture)
         {
             string buildDefinitionUri = value as string;
-            if ((!String.IsNullOrEmpty(buildDefinitionUri)) && (Window1.HiddenBuilds != null))
+            if ((!String.IsNullOrEmpty(buildDefinitionUri)) && (MainBuildList.HiddenBuilds != null))
             {
-                if (Window1.HiddenBuilds.Contains(buildDefinitionUri))
+                if (MainBuildList.HiddenBuilds.Contains(buildDefinitionUri))
                 {
                     return false;
                 }
