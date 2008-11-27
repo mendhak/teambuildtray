@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_11081551DDAC70AD23D2FD079DEB13AA"
+        "MsmKey" = "8:_455DB0E28E2F09F6D6081088A82BEA28"
         "OwnerKey" = "8:_89382DD932F541ED91E607565CCA01AD"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_11081551DDAC70AD23D2FD079DEB13AA"
+        "OwnerKey" = "8:_455DB0E28E2F09F6D6081088A82BEA28"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,14 +148,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_11081551DDAC70AD23D2FD079DEB13AA"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_455DB0E28E2F09F6D6081088A82BEA28"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WPFTaskbarNotifier, Version=1.0.3253.16371, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WPFTaskbarNotifier, Version=1.0.3253.18836, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_11081551DDAC70AD23D2FD079DEB13AA"
+                    "_455DB0E28E2F09F6D6081088A82BEA28"
                     {
                     "Name" = "8:WPFTaskbarNotifier.dll"
                     "Attributes" = "3:512"
@@ -265,19 +265,19 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Jobs-o-matic Team Build Tray"
+        "ProductName" = "8:Team Build Tray"
         "ProductCode" = "8:{83A11E52-79D7-48DE-B345-1377DFC1C6CD}"
-        "PackageCode" = "8:{1BDFF8A6-B524-4039-976E-CCCA73A2EE7C}"
+        "PackageCode" = "8:{A2E25032-2081-4924-99BD-CEBAC7D58210}"
         "UpgradeCode" = "8:{9FC6A2FC-1637-40AD-8363-A0CCC9C4D308}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
+        "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:1.0.3"
         "Manufacturer" = "8:Clyde Balneaves"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Jobs-o-matic Team Build Tray"
+        "Title" = "8:Team Build Tray"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Clyde Balneaves"
         "Keywords" = "8:"
