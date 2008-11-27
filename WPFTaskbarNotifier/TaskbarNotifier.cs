@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Media.Animation;
 using System.Windows.Forms;
 
+[assembly:CLSCompliant(true)]
 namespace WPFTaskbarNotifier
 {
     /// <summary>

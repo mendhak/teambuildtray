@@ -20,7 +20,6 @@ namespace Clyde.Rbi.TeamBuildTray
 {
     public partial class Window1
     {
-        private readonly object lockObject = new object();
         private readonly NotifierWindow notifierWindow;
 
         private readonly Dictionary<string, DateTime> buildUpdates = new Dictionary<string, DateTime>();
@@ -544,7 +543,7 @@ namespace Clyde.Rbi.TeamBuildTray
                         if (server.GetDefinitionByUri(detail.BuildDefinitionUri) != null)
                         {
                             //extract the drop location
-                            string dropLocation = detail.DropLocation.Substring(0, detail.DropLocation.LastIndexOf(@"\"));
+                            string dropLocation = detail.DropLocation.Substring(0, detail.DropLocation.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase));
                             server.QueueBuild(detail.BuildAgentUri, detail.BuildDefinitionUri, dropLocation);
                             break;
                         }

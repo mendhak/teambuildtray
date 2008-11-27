@@ -4,7 +4,7 @@ namespace Clyde.Rbi.TeamBuildTray
 {
     public static class BuildDefinitionExtension
     {
-        public static string GetFriendlyName(this BuildDefinition definition)
+        public static string GetFriendlyName(this BuildGroupItem definition)
         {
             return GetFriendlyNameFromUri(definition.FullPath);
         }

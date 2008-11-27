@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using System.Globalization;
 
 namespace Clyde.Rbi.TeamBuildTray
 {
@@ -31,7 +32,7 @@ namespace Clyde.Rbi.TeamBuildTray
             {
                 int splitLocation = agent.StatusMessage.LastIndexOf(" on ", StringComparison.OrdinalIgnoreCase);
                 string message = agent.StatusMessage.Substring(0, splitLocation);
-                DateTime date = DateTime.Parse(agent.StatusMessage.Substring(splitLocation + 4));
+                DateTime date = DateTime.Parse(agent.StatusMessage.Substring(splitLocation + 4), CultureInfo.CurrentCulture);
 
                 if (date >= since)
                 {

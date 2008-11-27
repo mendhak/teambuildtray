@@ -13,7 +13,7 @@ namespace Clyde.Rbi.TeamBuildTray
         private readonly Collection<TeamProject> projects = new Collection<TeamProject>();
         public string ServerName { get; set; }
         public int Port { get; set; }
-        public static readonly int InternvalTimeInSeconds = 5;
+        public static readonly int IntervalTimeInSeconds = 5;
         private Timer queryTimer;
 
         public Collection<TeamProject> Projects
@@ -66,7 +66,7 @@ namespace Clyde.Rbi.TeamBuildTray
                 colour = GetBuildList();
             }
 
-            queryTimer = new Timer(QueryTimer_Elapsed, null, new TimeSpan(0), new TimeSpan(0, 0, InternvalTimeInSeconds));
+            queryTimer = new Timer(QueryTimer_Elapsed, null, new TimeSpan(0), new TimeSpan(0, 0, IntervalTimeInSeconds));
 
             return colour;
         }
