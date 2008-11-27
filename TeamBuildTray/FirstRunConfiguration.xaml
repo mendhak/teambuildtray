@@ -25,8 +25,12 @@
 			<Label x:Name="LabelPortNumber" Content="Port:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#FFFFFFFF" Grid.Row="3"/>
 			<TextBox x:Name="TextBoxPortNumber" Text="8080" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" TabIndex="1" Grid.Column="1" Grid.Row="3" d:LayoutOverrides="Height"/>
 			<Label x:Name="LabelProtocol" Height="Auto" VerticalAlignment="Center" Content="Protocol:" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="#FFFFFFFF" Grid.Row="4"/>
-			<RadioButton x:Name="RadioButtonHttp" VerticalAlignment="Center" Content="http" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="#FFFFFFFF" TabIndex="2" Grid.Column="1" Grid.Row="4" IsChecked="True"/>
-			<RadioButton Margin="10,0,36.446,0" x:Name="RadioButtonHttps" Content="https" VerticalAlignment="Center" Width="Auto" Foreground="#FFFFFFFF" TabIndex="3" Grid.Column="2" Grid.Row="4" d:LayoutOverrides="Width"/>
+            <RadioButton x:Name="RadioButtonHttp" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="Black" TabIndex="2" Grid.Column="1" Grid.Row="4" IsChecked="True">
+                <Label Foreground="#FFFFFF">http</Label>
+            </RadioButton>
+            <RadioButton Margin="10,2.775,11.25,2.775" x:Name="RadioButtonHttps" Foreground="Black" TabIndex="3" Grid.Column="2" Grid.Row="4" d:LayoutOverrides="Width">
+            <Label Foreground="#FFFFFF">https</Label>
+            </RadioButton>
 			<Button x:Name="ButtonSave" Click="ButtonSave_Click" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" TabIndex="5" Grid.Column="2" Grid.Row="7" IsDefault="True"/>
 			<Button x:Name="ButtonCancel" Click="ButtonCancel_Click" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Width="74.999" TabIndex="6" Grid.Column="3" Grid.Row="7" IsCancel="True"/>
 			<Border HorizontalAlignment="Left" Margin="-151,-9.5,0,-14.5" Width="43" Grid.Row="2"/>
