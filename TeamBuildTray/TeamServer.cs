@@ -12,18 +12,33 @@ namespace TeamBuildTray
 {
     public class TeamServer
     {
-        private Collection<TeamProject> projects = new Collection<TeamProject>();
-        public string ServerName { get; set; }
-        public int Port { get; set; }
-        public string Protocol { get; set; }
-
-        public static readonly int IntervalTimeInSeconds = 5;
         private Timer queryTimer;
+        public static readonly int IntervalTimeInSeconds = 5;
+
+
+        public string ServerName 
+        { 
+            get; 
+            set; 
+        }
+
+        public int Port 
+        { 
+            get; 
+            set; 
+        }
+
+        public string Protocol 
+        { 
+            get; 
+            set; 
+        }
+
 
         public Collection<TeamProject> Projects
         {
-            get { return projects; }
-            set { projects = value; }
+            get;
+            set;
         }
 
 
@@ -34,6 +49,7 @@ namespace TeamBuildTray
                 return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "servers.xml");
             }
         }
+
         public static string BuildListConfigurationPath
         {
             get
@@ -45,7 +61,7 @@ namespace TeamBuildTray
 
         public BuildDefinition GetDefinitionByUri(string uri)
         {
-            foreach (TeamProject project in projects)
+            foreach (TeamProject project in Projects)
             {
                 if (project.BuildDefinitions.ContainsKey(uri))
                 {
@@ -58,11 +74,11 @@ namespace TeamBuildTray
 
         void QueryTimer_Elapsed(object sender)
         {
-            if (Monitor.TryEnter(projects))
+            if (Monitor.TryEnter(Projects))
             {
                 try
                 {
-                    foreach (TeamProject project in projects)
+                    foreach (TeamProject project in Projects)
                     {
                         //Fire update event
                         if (OnProjectsUpdated != null)
@@ -73,7 +89,7 @@ namespace TeamBuildTray
                 }
                 finally
                 {
-                    Monitor.Exit(projects);
+                    Monitor.Exit(Projects);
                 }
             }
         }
@@ -84,7 +100,7 @@ namespace TeamBuildTray
 
             if (refreshServerList)
             {
-                //Connect to the server and get a build lsit
+                //Connect to the server and get a build list
                 colour = GetBuildList();
             }
 
@@ -155,7 +171,7 @@ namespace TeamBuildTray
 
         private EndpointAddress GetEndpointAddress()
         {
-            return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port + "/build/v2.0/buildservice.asmx"));
+            return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port.ToString() + "/build/v2.0/buildservice.asmx"));
         }
 
         private BuildQueryEventArgs QueryBuilds(IEnumerable<BuildDefinition> buildDefinitions)
@@ -182,7 +198,7 @@ namespace TeamBuildTray
             }
 
             //Generate agent specs
-            foreach (TeamProject project in projects)
+            foreach (TeamProject project in Projects)
             {
                 foreach (BuildAgent agent in project.BuildAgents)
                 {
@@ -207,9 +223,9 @@ namespace TeamBuildTray
 
             try
             {
-                var queueResults =
+                ReadOnlyCollection<BuildQueueQueryResult> queueResults =
                     new List<BuildQueueQueryResult>(soapClient.QueryBuildQueue(buildQueueSpecs.ToArray())).AsReadOnly();
-                var buildResults =
+                ReadOnlyCollection<BuildQueryResult> buildResults =
                     new List<BuildQueryResult>(soapClient.QueryBuilds(buildDetailSpecs.ToArray())).AsReadOnly();
 
                 return new BuildQueryEventArgs
@@ -227,7 +243,7 @@ namespace TeamBuildTray
 
         public void QueueBuild(string agentUri, string buildUri, string dropLocation)
         {
-            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetEndpointAddress());
+            BuildServiceSoapClient soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetEndpointAddress());
             BuildRequest request = new BuildRequest
             {
                 BuildAgentUri = agentUri,

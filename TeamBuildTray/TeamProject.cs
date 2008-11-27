@@ -11,23 +11,34 @@ namespace TeamBuildTray
     {
         private readonly Collection<BuildAgent> buildAgents = new Collection<BuildAgent>();
         private readonly Dictionary<string, BuildDefinition> buildDefinitions = new Dictionary<string, BuildDefinition>();
-        public string ProjectName { get; set; }
+        
+        public string ProjectName 
+        { 
+            get; 
+            set; 
+        }
 
         [XmlIgnore]
         public Dictionary<string, BuildDefinition> BuildDefinitions
         {
-            get { return buildDefinitions; }
+            get 
+            { 
+                return buildDefinitions; 
+            }
         }
 
         [XmlIgnore]
         public Collection<BuildAgent> BuildAgents
         {
-            get { return buildAgents; }
+            get 
+            { 
+                return buildAgents; 
+            }
         }
 
         public Dictionary<DateTime, StatusMessage> GetAgentMessages(DateTime since)
         {
-            var messages = new Dictionary<DateTime, StatusMessage>();
+            Dictionary<DateTime, StatusMessage> messages = new Dictionary<DateTime, StatusMessage>();
             foreach (BuildAgent agent in buildAgents)
             {
                 int splitLocation = agent.StatusMessage.LastIndexOf(" on ", StringComparison.OrdinalIgnoreCase);

@@ -33,6 +33,7 @@ namespace TeamBuildTray
         private List<TeamServer> servers;
         private static List<string> hiddenFields;
         private bool showConfiguration;
+        
         internal static List<string> HiddenBuilds
         {
             get
@@ -106,7 +107,7 @@ namespace TeamBuildTray
             //Add servers to menu
             foreach (TeamServer server in servers)
             {
-                var menuItem = new MenuItem { Header = server.ServerName + ":" + server.Port };
+                MenuItem menuItem = new MenuItem { Header = server.ServerName + ":" + server.Port };
                 NotifyIconMainIcon.ContextMenu.Items.Insert(0, menuItem);
 
                 server.OnProjectsUpdated += Server_OnProjectsUpdated;
@@ -132,20 +133,24 @@ namespace TeamBuildTray
             //If the user pressed cancel or closed the window, don't let them continue.
             if (firstRunHasRun.HasValue && firstRunHasRun.Value == false)
             {
-                Close();
+                this.Close();
                 Environment.Exit(0);
             }   
         }
 
-
+        /// <summary>
+        /// Opens the servers.xml file and gets the team servers out.
+        /// </summary>
+        /// <returns></returns>
         private static List<TeamServer> GetServersFromConfigurationFile()
         {
-            var serializer = new XmlSerializer(typeof(List<TeamServer>));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<TeamServer>));
             FileStream fs = File.OpenRead(TeamServer.ServerConfigurationPath);
             List<TeamServer> teamServers = serializer.Deserialize(fs) as List<TeamServer>;
             fs.Close();
             return teamServers;
         }
+
 
         private static void LoadHiddenBuilds()
         {
@@ -154,7 +159,7 @@ namespace TeamBuildTray
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(List<string>));
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
                     FileStream fs = File.OpenRead(TeamServer.BuildListConfigurationPath);
                     hiddenFields = serializer.Deserialize(fs) as List<string>;
                     fs.Close();
@@ -184,7 +189,7 @@ namespace TeamBuildTray
 
             Dispatcher.Invoke(DispatcherPriority.Normal, (Action)(() =>
                 {
-                    var project = sender as TeamProject;
+                    TeamProject project = sender as TeamProject;
                     if (project != null)
                     {
                         lock (buildContent)
@@ -219,7 +224,7 @@ namespace TeamBuildTray
                                             buildUpdates.Add(item.BuildDefinitionUri, item.LastChangedOn);
                                         }
 
-                                        //Add if doesnt exist
+                                        //Add if doesn't exist
                                         if (!currentBuilds.ContainsKey(item.BuildDefinitionUri))
                                         {
                                             currentBuilds.Add(item.BuildDefinitionUri, item);
@@ -292,6 +297,7 @@ namespace TeamBuildTray
                     {
                         continue;
                     }
+
                     //Get the friendly names
                     string buildName = String.Empty;
                     foreach (TeamServer server in servers)
@@ -305,7 +311,7 @@ namespace TeamBuildTray
 
                     if ((!buildIdsAlertedInProgress.Contains(build.Id)) && (build.Status == QueueStatus.InProgress))
                     {
-                        var message = new StatusMessage
+                        StatusMessage message = new StatusMessage
                                                     {
                                                         EventDate = DateTime.Now,
                                                         BuildStatus = IconColour.Amber,
@@ -324,7 +330,7 @@ namespace TeamBuildTray
                     }
                     else if ((!buildIdsAlertedQueued.Contains(build.Id)) && (build.Status == QueueStatus.Queued))
                     {
-                        var message = new StatusMessage
+                        StatusMessage message = new StatusMessage
                         {
                             EventDate = DateTime.Now,
                             BuildStatus = IconColour.Amber,
@@ -336,7 +342,7 @@ namespace TeamBuildTray
                     }
                     else if ((!buildIdsAlertedDone.Contains(build.Id)) && (build.Status == QueueStatus.Completed))
                     {
-                        var message = new StatusMessage
+                        StatusMessage message = new StatusMessage
                         {
                             EventDate = DateTime.Now
                         };
@@ -447,7 +453,7 @@ namespace TeamBuildTray
         internal void SetIcon(IconColour iconColour)
         {
             currentIconColour = iconColour;
-            var iconUri = new Uri("pack://application:,,,/" + iconColour + ".ico", UriKind.RelativeOrAbsolute);
+            Uri iconUri = new Uri("pack://application:,,,/" + iconColour + ".ico", UriKind.RelativeOrAbsolute);
             NotifyIconMainIcon.Icon = BitmapFrame.Create(iconUri);
         }
 
@@ -476,7 +482,7 @@ namespace TeamBuildTray
 
 
             //Save the hidden builds list
-            var serializer = new XmlSerializer(typeof(List<string>));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
             FileStream fs = File.Open(TeamServer.BuildListConfigurationPath, FileMode.Create, FileAccess.Write,
                                       FileShare.ReadWrite);
             serializer.Serialize(fs, HiddenBuilds);
@@ -512,14 +518,14 @@ namespace TeamBuildTray
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
-            var border = sender as Border;
+            Border border = sender as Border;
 
             if (border != null) border.Background = new SolidColorBrush(Color.FromArgb(31, 0, 0, 0));
         }
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
-            var border = sender as Border;
+            Border border = sender as Border;
 
             if (border != null) border.Background = null;
         }
