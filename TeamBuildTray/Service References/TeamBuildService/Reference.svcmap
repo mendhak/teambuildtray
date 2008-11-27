@@ -19,11 +19,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://www.example.com/build/v2.0/buildservice.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="buildservice.disco" MetadataType="Disco" ID="40e7133b-009f-4461-b79a-34f4d058ab10" SourceId="1" SourceUrl="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx?disco" />
-    <MetadataFile FileName="buildservice.wsdl" MetadataType="Wsdl" ID="671bdc52-b972-4c1e-a051-15147fb340a0" SourceId="1" SourceUrl="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx?wsdl" />
+    <MetadataFile FileName="buildservice.disco" MetadataType="Disco" ID="40e7133b-009f-4461-b79a-34f4d058ab10" SourceId="1" SourceUrl="http://www.example.com/build/v2.0/buildservice.asmx?disco" />
+    <MetadataFile FileName="buildservice.wsdl" MetadataType="Wsdl" ID="671bdc52-b972-4c1e-a051-15147fb340a0" SourceId="1" SourceUrl="http://www.example.com/build/v2.0/buildservice.asmx?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

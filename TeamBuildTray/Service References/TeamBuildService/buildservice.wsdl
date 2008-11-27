@@ -1633,10 +1633,10 @@
   <wsdl:service name="BuildService">
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Team Foundation Build web service</wsdl:documentation>
     <wsdl:port name="BuildServiceSoap" binding="tns:BuildServiceSoap">
-      <soap:address location="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" />
+      <soap:address location="http://www.example.com/build/v2.0/buildservice.asmx" />
     </wsdl:port>
     <wsdl:port name="BuildServiceSoap12" binding="tns:BuildServiceSoap12">
-      <soap12:address location="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" />
+      <soap12:address location="http://www.example.com/build/v2.0/buildservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

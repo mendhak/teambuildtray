@@ -100,10 +100,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BuildServiceSoap" contract="TeamBuildService.BuildServiceSoap" bindingType="basicHttpBinding" address="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" bindingConfiguration="BuildServiceSoap">
+    <endpoint name="BuildServiceSoap" contract="TeamBuildService.BuildServiceSoap" bindingType="basicHttpBinding" address="http://www.example.com/build/v2.0/buildservice.asmx" bindingConfiguration="BuildServiceSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx</serializedValue>
+          <serializedValue>http://www.example.com/build/v2.0/buildservice.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
