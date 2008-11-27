@@ -1,0 +1,15 @@
+﻿<Application x:Class="Clyde.Rbi.TeamBuildTray.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    StartupUri="Window1.xaml">
+    <Application.Resources>
+         
+    	<LinearGradientBrush x:Key="GradientBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+    		<GradientStop Color="#FF000000" Offset="0"/>
+    		<GradientStop Color="#FF000000" Offset="1"/>
+    		<GradientStop Color="#FFB7CCDB" Offset="0.031"/>
+    		<GradientStop Color="#FFBEBEBE" Offset="0.955"/>
+    	</LinearGradientBrush>
+         
+    </Application.Resources>
+</Application>

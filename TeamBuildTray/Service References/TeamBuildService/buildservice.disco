@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx?wsdl" docRef="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" xmlns:q1="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03" binding="q1:BuildServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" xmlns:q2="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03" binding="q2:BuildServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

@@ -1,0 +1,1642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Team Foundation Build web service</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03">
+      <s:element name="AddBuildAgents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="agents" type="tns:ArrayOfBuildAgent" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildAgent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildAgent" nillable="true" type="tns:BuildAgent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildAgent">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BuildGroupItem">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="StatusMessage" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+            </s:sequence>
+            <s:attribute name="MachineName" type="s:string" />
+            <s:attribute name="Port" type="s:int" use="required" />
+            <s:attribute name="RequireSecureChannel" type="s:boolean" use="required" />
+            <s:attribute name="MaxProcesses" type="s:int" use="required" />
+            <s:attribute name="BuildDirectory" type="s:string" />
+            <s:attribute name="Status" type="tns:AgentStatus" use="required" />
+            <s:attribute name="QueueCount" type="s:int" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BuildGroupItem" abstract="true">
+        <s:attribute name="Uri" type="s:string" />
+        <s:attribute name="FullPath" type="s:string" />
+      </s:complexType>
+      <s:complexType name="BuildGroup">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BuildGroupItem">
+            <s:attribute name="Description" type="s:string" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BuildDefinition">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BuildGroupItem">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="RetentionPolicies" type="tns:ArrayOfRetentionPolicy" />
+              <s:element minOccurs="0" maxOccurs="1" name="Schedules" type="tns:ArrayOfSchedule" />
+              <s:element minOccurs="0" maxOccurs="1" name="WorkspaceTemplate" type="tns:WorkspaceTemplate" />
+            </s:sequence>
+            <s:attribute name="DefaultBuildAgentUri" type="s:string" />
+            <s:attribute name="DefaultDropLocation" type="s:string" />
+            <s:attribute name="ConfigurationFolderUri" type="s:string" />
+            <s:attribute name="MaxTimeout" type="s:int" use="required" />
+            <s:attribute default="None" name="ContinuousIntegrationType" type="tns:ContinuousIntegrationType" />
+            <s:attribute name="ContinuousIntegrationQuietPeriod" type="s:int" use="required" />
+            <s:attribute name="LastBuildUri" type="s:string" />
+            <s:attribute name="LastGoodBuildUri" type="s:string" />
+            <s:attribute name="LastGoodBuildLabel" type="s:string" />
+            <s:attribute name="Enabled" type="s:boolean" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfRetentionPolicy">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RetentionPolicy" nillable="true" type="tns:RetentionPolicy" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RetentionPolicy">
+        <s:attribute name="BuildStatus" type="tns:BuildStatus" use="required" />
+        <s:attribute name="NumberToKeep" type="s:int" use="required" />
+      </s:complexType>
+      <s:simpleType name="BuildStatus">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="InProgress" />
+              <s:enumeration value="Succeeded" />
+              <s:enumeration value="PartiallySucceeded" />
+              <s:enumeration value="Failed" />
+              <s:enumeration value="Stopped" />
+              <s:enumeration value="NotStarted" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:complexType name="ArrayOfSchedule">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Schedule" nillable="true" type="tns:Schedule" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Schedule">
+        <s:attribute name="UtcStartTime" type="s:int" use="required" />
+        <s:attribute name="UtcDaysToBuild" type="tns:ScheduleDays" use="required" />
+      </s:complexType>
+      <s:simpleType name="ScheduleDays">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="Monday" />
+              <s:enumeration value="Tuesday" />
+              <s:enumeration value="Wednesday" />
+              <s:enumeration value="Thursday" />
+              <s:enumeration value="Friday" />
+              <s:enumeration value="Saturday" />
+              <s:enumeration value="Sunday" />
+              <s:enumeration value="All" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:complexType name="WorkspaceTemplate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Mappings" type="tns:ArrayOfWorkspaceMapping" />
+        </s:sequence>
+        <s:attribute name="DefinitionUri" type="s:string" />
+        <s:attribute name="LastModifiedDate" type="s:dateTime" use="required" />
+        <s:attribute name="LastModifiedBy" type="s:string" />
+      </s:complexType>
+      <s:complexType name="ArrayOfWorkspaceMapping">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WorkspaceMapping" nillable="true" type="tns:WorkspaceMapping" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WorkspaceMapping">
+        <s:attribute name="ServerItem" type="s:string" />
+        <s:attribute name="LocalItem" type="s:string" />
+        <s:attribute default="Map" name="MappingType" type="tns:WorkspaceMappingType" />
+        <s:attribute default="120" name="Depth" type="s:int" />
+      </s:complexType>
+      <s:simpleType name="WorkspaceMappingType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Map" />
+          <s:enumeration value="Cloak" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ContinuousIntegrationType">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Individual" />
+          <s:enumeration value="Batch" />
+          <s:enumeration value="Schedule" />
+          <s:enumeration value="ScheduleForced" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="AgentStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Enabled" />
+          <s:enumeration value="Disabled" />
+          <s:enumeration value="Unreachable" />
+          <s:enumeration value="Initializing" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="AddBuildAgentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddBuildAgentsResult" type="tns:ArrayOfBuildAgent" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddBuildDefinitions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="definitions" type="tns:ArrayOfBuildDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildDefinition" nillable="true" type="tns:BuildDefinition" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddBuildDefinitionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddBuildDefinitionsResult" type="tns:ArrayOfBuildDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddBuildQualities">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="teamProject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="qualities" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddBuildQualitiesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CancelBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ids" type="tns:ArrayOfInt" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancelBuildsResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteBuildAgents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteBuildAgentsResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteBuildDefinitions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteBuildDefinitionsResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteBuildQualities">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="teamProject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="qualities" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteBuildQualitiesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteBuildsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteBuildsResult" type="tns:ArrayOfBuildDeletionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildDeletionResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildDeletionResult" nillable="true" type="tns:BuildDeletionResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildDeletionResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LabelFailure" type="tns:Failure" />
+          <s:element minOccurs="0" maxOccurs="1" name="DropLocationFailure" type="tns:Failure" />
+          <s:element minOccurs="0" maxOccurs="1" name="TestResultFailure" type="tns:Failure" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Failure">
+        <s:attribute name="Code" type="s:string" />
+        <s:attribute name="Message" type="s:string" />
+      </s:complexType>
+      <s:element name="EvaluateSchedules">
+        <s:complexType />
+      </s:element>
+      <s:element name="EvaluateSchedulesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetAffectedBuildDefinitions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="serverItems" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAffectedBuildDefinitionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAffectedBuildDefinitionsResult" type="tns:ArrayOfBuildDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBuildQualities">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="teamProject" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBuildQualitiesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBuildQualitiesResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessChangeset">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="changesetId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessChangesetResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="QueryBuildAgentsByUri">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildAgentsByUriResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildAgentsByUriResult" type="tns:ArrayOfBuildAgent" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildDefinitionsByUri">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildDefinitionsByUriResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildDefinitionsByUriResult" type="tns:BuildGroupQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BuildGroupQueryResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:QueryResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Agents" type="tns:ArrayOfBuildAgent" />
+              <s:element minOccurs="0" maxOccurs="1" name="Definitions" type="tns:ArrayOfBuildDefinition" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="QueryResult" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Failures" type="tns:ArrayOfFailure" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFailure">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Failure" nillable="true" type="tns:Failure" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="QueryBuildGroups">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="specs" type="tns:ArrayOfBuildGroupItemSpec" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildGroupItemSpec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildGroupItemSpec" nillable="true" type="tns:BuildGroupItemSpec" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildGroupItemSpec" abstract="true">
+        <s:attribute name="FullPath" type="s:string" />
+      </s:complexType>
+      <s:complexType name="BuildDefinitionSpec">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BuildGroupItemSpec" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BuildAgentSpec">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BuildGroupItemSpec">
+            <s:attribute name="MachineName" type="s:string" />
+            <s:attribute name="Port" type="s:int" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="QueryBuildGroupsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildGroupsResult" type="tns:ArrayOfBuildGroupQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildGroupQueryResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildGroupQueryResult" nillable="true" type="tns:BuildGroupQueryResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="QueryBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="specs" type="tns:ArrayOfBuildDetailSpec" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildDetailSpec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildDetailSpec" nillable="true" type="tns:BuildDetailSpec" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildDetailSpec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DefinitionSpec" type="tns:BuildDefinitionSpec" />
+          <s:element minOccurs="0" maxOccurs="1" name="InformationTypes" type="tns:ArrayOfString" />
+        </s:sequence>
+        <s:attribute name="DefinitionPath" type="s:string" />
+        <s:attribute name="BuildNumber" type="s:string" />
+        <s:attribute name="MinFinishTime" type="s:dateTime" use="required" />
+        <s:attribute name="MaxFinishTime" type="s:dateTime" use="required" />
+        <s:attribute name="MinChangedTime" type="s:dateTime" use="required" />
+        <s:attribute name="Status" type="tns:BuildStatus" use="required" />
+        <s:attribute name="Quality" type="s:string" />
+        <s:attribute default="None" name="QueryOptions" type="tns:QueryOptions" />
+        <s:attribute default="StartTimeAscending" name="QueryOrder" type="tns:BuildQueryOrder" />
+        <s:attribute default="2147483647" name="MaxBuildsPerDefinition" type="s:int" />
+      </s:complexType>
+      <s:simpleType name="QueryOptions">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="Definitions" />
+              <s:enumeration value="Agents" />
+              <s:enumeration value="Workspaces" />
+              <s:enumeration value="All" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:simpleType name="BuildQueryOrder">
+        <s:restriction base="s:string">
+          <s:enumeration value="StartTimeAscending" />
+          <s:enumeration value="StartTimeDescending" />
+          <s:enumeration value="FinishTimeAscending" />
+          <s:enumeration value="FinishTimeDescending" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="QueryBuildsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildsResult" type="tns:ArrayOfBuildQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildQueryResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildQueryResult" nillable="true" type="tns:BuildQueryResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildQueryResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:QueryResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Agents" type="tns:ArrayOfBuildAgent" />
+              <s:element minOccurs="0" maxOccurs="1" name="Definitions" type="tns:ArrayOfBuildDefinition" />
+              <s:element minOccurs="0" maxOccurs="1" name="Builds" type="tns:ArrayOfBuildDetail" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfBuildDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildDetail" nillable="true" type="tns:BuildDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CommandLineArguments" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Information" type="tns:ArrayOfBuildInformationNode" />
+        </s:sequence>
+        <s:attribute name="Uri" type="s:string" />
+        <s:attribute name="BuildNumber" type="s:string" />
+        <s:attribute name="BuildDefinitionUri" type="s:string" />
+        <s:attribute name="StartTime" type="s:dateTime" use="required" />
+        <s:attribute name="FinishTime" type="s:dateTime" use="required" />
+        <s:attribute name="Status" type="tns:BuildStatus" use="required" />
+        <s:attribute name="Quality" type="s:string" />
+        <s:attribute name="CompilationStatus" type="tns:BuildPhaseStatus" use="required" />
+        <s:attribute name="TestStatus" type="tns:BuildPhaseStatus" use="required" />
+        <s:attribute name="DropLocation" type="s:string" />
+        <s:attribute name="LogLocation" type="s:string" />
+        <s:attribute name="BuildAgentUri" type="s:string" />
+        <s:attribute name="ConfigurationFolderUri" type="s:string" />
+        <s:attribute name="SourceGetVersion" type="s:string" />
+        <s:attribute name="RequestedFor" type="s:string" />
+        <s:attribute name="RequestedBy" type="s:string" />
+        <s:attribute name="LastChangedOn" type="s:dateTime" use="required" />
+        <s:attribute name="LastChangedBy" type="s:string" />
+        <s:attribute name="KeepForever" type="s:boolean" use="required" />
+        <s:attribute name="LabelName" type="s:string" />
+      </s:complexType>
+      <s:complexType name="ArrayOfBuildInformationNode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildInformationNode" nillable="true" type="tns:BuildInformationNode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildInformationNode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfInformationField" />
+        </s:sequence>
+        <s:attribute name="NodeId" type="s:int" use="required" />
+        <s:attribute name="ParentId" type="s:int" use="required" />
+        <s:attribute name="Type" type="s:string" />
+        <s:attribute name="LastModifiedDate" type="s:dateTime" use="required" />
+        <s:attribute name="LastModifiedBy" type="s:string" />
+      </s:complexType>
+      <s:complexType name="ArrayOfInformationField">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InformationField" nillable="true" type="tns:InformationField" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="InformationField">
+        <s:attribute name="Name" type="s:string" />
+        <s:attribute name="Value" type="s:string" />
+      </s:complexType>
+      <s:simpleType name="BuildPhaseStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Failed" />
+          <s:enumeration value="Succeeded" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="QueryBuildsByUri">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="informationTypes" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="options" type="tns:QueryOptions" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildsByUriResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildsByUriResult" type="tns:BuildQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildQueue">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="specs" type="tns:ArrayOfBuildQueueSpec" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildQueueSpec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildQueueSpec" nillable="true" type="tns:BuildQueueSpec" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildQueueSpec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AgentSpec" type="tns:BuildAgentSpec" />
+          <s:element minOccurs="0" maxOccurs="1" name="DefinitionSpec" type="tns:BuildDefinitionSpec" />
+        </s:sequence>
+        <s:attribute name="Options" type="tns:QueryOptions" use="required" />
+        <s:attribute name="StatusFlags" type="tns:QueueStatus" use="required" />
+        <s:attribute name="CompletedAge" type="s:int" use="required" />
+      </s:complexType>
+      <s:simpleType name="QueueStatus">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="InProgress" />
+              <s:enumeration value="Queued" />
+              <s:enumeration value="Postponed" />
+              <s:enumeration value="Completed" />
+              <s:enumeration value="Canceled" />
+              <s:enumeration value="All" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:element name="QueryBuildQueueResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildQueueResult" type="tns:ArrayOfBuildQueueQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildQueueQueryResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildQueueQueryResult" nillable="true" type="tns:BuildQueueQueryResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildQueueQueryResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:QueryResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Builds" type="tns:ArrayOfQueuedBuild" />
+              <s:element minOccurs="0" maxOccurs="1" name="Definitions" type="tns:ArrayOfBuildDefinition" />
+              <s:element minOccurs="0" maxOccurs="1" name="Agents" type="tns:ArrayOfBuildAgent" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfQueuedBuild">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QueuedBuild" nillable="true" type="tns:QueuedBuild" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="QueuedBuild">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CommandLineArguments" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Build" type="tns:BuildDetail" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:int" use="required" />
+        <s:attribute name="BuildAgentUri" type="s:string" />
+        <s:attribute name="BuildDefinitionUri" type="s:string" />
+        <s:attribute name="QueueTime" type="s:dateTime" use="required" />
+        <s:attribute name="QueuePosition" type="s:int" use="required" />
+        <s:attribute name="Priority" type="tns:QueuePriority" use="required" />
+        <s:attribute name="Status" type="tns:QueueStatus" use="required" />
+        <s:attribute name="GetOption" type="tns:GetOption" use="required" />
+        <s:attribute name="CustomGetVersion" type="s:string" />
+        <s:attribute name="DropLocation" type="s:string" />
+        <s:attribute name="RequestedFor" type="s:string" />
+        <s:attribute name="RequestedBy" type="s:string" />
+      </s:complexType>
+      <s:simpleType name="QueuePriority">
+        <s:restriction base="s:string">
+          <s:enumeration value="Low" />
+          <s:enumeration value="BelowNormal" />
+          <s:enumeration value="Normal" />
+          <s:enumeration value="AboveNormal" />
+          <s:enumeration value="High" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="GetOption">
+        <s:restriction base="s:string">
+          <s:enumeration value="LatestOnQueue" />
+          <s:enumeration value="LatestOnBuild" />
+          <s:enumeration value="Custom" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="QueryBuildQueueById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ids" type="tns:ArrayOfInt" />
+            <s:element minOccurs="1" maxOccurs="1" name="options" type="tns:QueryOptions" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryBuildQueueByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryBuildQueueByIdResult" type="tns:BuildQueueQueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueueBuild">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="buildRequest" type="tns:BuildRequest" />
+            <s:element minOccurs="1" maxOccurs="1" name="options" type="tns:QueueOptions" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BuildRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CommandLineArguments" type="s:string" />
+        </s:sequence>
+        <s:attribute name="BuildAgentUri" type="s:string" />
+        <s:attribute name="BuildDefinitionUri" type="s:string" />
+        <s:attribute default="Normal" name="Priority" type="tns:QueuePriority" />
+        <s:attribute name="Postponed" type="s:boolean" use="required" />
+        <s:attribute name="DropLocation" type="s:string" />
+        <s:attribute default="LatestOnBuild" name="GetOption" type="tns:GetOption" />
+        <s:attribute name="CustomGetVersion" type="s:string" />
+        <s:attribute default="2147483647" name="MaxQueuePosition" type="s:int" />
+        <s:attribute name="RequestedFor" type="s:string" />
+      </s:complexType>
+      <s:simpleType name="QueueOptions">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="Preview" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:element name="QueueBuildResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueueBuildResult" type="tns:QueuedBuild" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StopBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uris" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StopBuildsResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateBuildAgents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="updates" type="tns:ArrayOfBuildAgent" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateBuildAgentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateBuildAgentsResult" type="tns:ArrayOfBuildAgent" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateBuildDefinitions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="updates" type="tns:ArrayOfBuildDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateBuildDefinitionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateBuildDefinitionsResult" type="tns:ArrayOfBuildDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateBuildInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="changes" type="tns:ArrayOfInformationChangeRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInformationChangeRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InformationChangeRequest" nillable="true" type="tns:InformationChangeRequest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="InformationChangeRequest" abstract="true">
+        <s:attribute name="BuildUri" type="s:string" />
+      </s:complexType>
+      <s:complexType name="InformationEditRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:InformationChangeRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfInformationField" />
+            </s:sequence>
+            <s:attribute name="NodeId" type="s:int" use="required" />
+            <s:attribute default="MergeFields" name="Options" type="tns:InformationEditOptions" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="InformationEditOptions">
+        <s:restriction base="s:string">
+          <s:enumeration value="MergeFields" />
+          <s:enumeration value="ReplaceFields" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="InformationAddRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:InformationChangeRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfInformationField" />
+            </s:sequence>
+            <s:attribute name="NodeType" type="s:string" />
+            <s:attribute name="NodeId" type="s:int" use="required" />
+            <s:attribute name="ParentId" type="s:int" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="InformationDeleteRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:InformationChangeRequest">
+            <s:attribute name="NodeId" type="s:int" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="UpdateBuildInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateBuildInformationResult" type="tns:ArrayOfBuildInformationNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="updateOptions" type="tns:ArrayOfBuildUpdateOptions" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBuildUpdateOptions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BuildUpdateOptions" nillable="true" type="tns:BuildUpdateOptions" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BuildUpdateOptions">
+        <s:attribute name="Uri" type="s:string" />
+        <s:attribute name="Fields" type="tns:BuildUpdate" use="required" />
+        <s:attribute name="BuildNumber" type="s:string" />
+        <s:attribute name="DropLocation" type="s:string" />
+        <s:attribute name="LabelName" type="s:string" />
+        <s:attribute name="LogLocation" type="s:string" />
+        <s:attribute name="Status" type="tns:BuildStatus" use="required" />
+        <s:attribute name="Quality" type="s:string" />
+        <s:attribute name="CompilationStatus" type="tns:BuildPhaseStatus" use="required" />
+        <s:attribute name="TestStatus" type="tns:BuildPhaseStatus" use="required" />
+        <s:attribute name="KeepForever" type="s:boolean" use="required" />
+        <s:attribute name="SourceGetVersion" type="s:string" />
+      </s:complexType>
+      <s:simpleType name="BuildUpdate">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="BuildNumber" />
+              <s:enumeration value="DropLocation" />
+              <s:enumeration value="LabelName" />
+              <s:enumeration value="LogLocation" />
+              <s:enumeration value="Status" />
+              <s:enumeration value="Quality" />
+              <s:enumeration value="CompilationStatus" />
+              <s:enumeration value="TestStatus" />
+              <s:enumeration value="KeepForever" />
+              <s:enumeration value="SourceGetVersion" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:element name="UpdateBuildsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateBuildsResult" type="tns:ArrayOfBuildDetail" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateQueuedBuilds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="updateOptions" type="tns:ArrayOfQueuedBuildUpdateOptions" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfQueuedBuildUpdateOptions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="QueuedBuildUpdateOptions" nillable="true" type="tns:QueuedBuildUpdateOptions" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="QueuedBuildUpdateOptions">
+        <s:attribute name="QueueId" type="s:int" use="required" />
+        <s:attribute name="Fields" type="tns:QueuedBuildUpdate" use="required" />
+        <s:attribute default="Normal" name="Priority" type="tns:QueuePriority" />
+        <s:attribute name="Postponed" type="s:boolean" use="required" />
+      </s:complexType>
+      <s:simpleType name="QueuedBuildUpdate">
+        <s:list>
+          <s:simpleType>
+            <s:restriction base="s:string">
+              <s:enumeration value="None" />
+              <s:enumeration value="Priority" />
+              <s:enumeration value="Postponed" />
+            </s:restriction>
+          </s:simpleType>
+        </s:list>
+      </s:simpleType>
+      <s:element name="UpdateQueuedBuildsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateQueuedBuildsResult" type="tns:ArrayOfQueuedBuild" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AddBuildAgentsSoapIn">
+    <wsdl:part name="parameters" element="tns:AddBuildAgents" />
+  </wsdl:message>
+  <wsdl:message name="AddBuildAgentsSoapOut">
+    <wsdl:part name="parameters" element="tns:AddBuildAgentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddBuildDefinitionsSoapIn">
+    <wsdl:part name="parameters" element="tns:AddBuildDefinitions" />
+  </wsdl:message>
+  <wsdl:message name="AddBuildDefinitionsSoapOut">
+    <wsdl:part name="parameters" element="tns:AddBuildDefinitionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddBuildQualitiesSoapIn">
+    <wsdl:part name="parameters" element="tns:AddBuildQualities" />
+  </wsdl:message>
+  <wsdl:message name="AddBuildQualitiesSoapOut">
+    <wsdl:part name="parameters" element="tns:AddBuildQualitiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelBuilds" />
+  </wsdl:message>
+  <wsdl:message name="CancelBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelBuildsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildAgentsSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteBuildAgents" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildAgentsSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteBuildAgentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildDefinitionsSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteBuildDefinitions" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildDefinitionsSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteBuildDefinitionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildQualitiesSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteBuildQualities" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildQualitiesSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteBuildQualitiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteBuilds" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteBuildsResponse" />
+  </wsdl:message>
+  <wsdl:message name="EvaluateSchedulesSoapIn">
+    <wsdl:part name="parameters" element="tns:EvaluateSchedules" />
+  </wsdl:message>
+  <wsdl:message name="EvaluateSchedulesSoapOut">
+    <wsdl:part name="parameters" element="tns:EvaluateSchedulesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAffectedBuildDefinitionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAffectedBuildDefinitions" />
+  </wsdl:message>
+  <wsdl:message name="GetAffectedBuildDefinitionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAffectedBuildDefinitionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBuildQualitiesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBuildQualities" />
+  </wsdl:message>
+  <wsdl:message name="GetBuildQualitiesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBuildQualitiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ProcessChangesetSoapIn">
+    <wsdl:part name="parameters" element="tns:ProcessChangeset" />
+  </wsdl:message>
+  <wsdl:message name="ProcessChangesetSoapOut">
+    <wsdl:part name="parameters" element="tns:ProcessChangesetResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildAgentsByUriSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildAgentsByUri" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildAgentsByUriSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildAgentsByUriResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildDefinitionsByUriSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildDefinitionsByUri" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildDefinitionsByUriSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildDefinitionsByUriResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildGroupsSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildGroups" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildGroupsSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildGroupsResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuilds" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildsResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildsByUriSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildsByUri" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildsByUriSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildsByUriResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildQueueSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildQueue" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildQueueSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildQueueResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildQueueByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryBuildQueueById" />
+  </wsdl:message>
+  <wsdl:message name="QueryBuildQueueByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryBuildQueueByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="QueueBuildSoapIn">
+    <wsdl:part name="parameters" element="tns:QueueBuild" />
+  </wsdl:message>
+  <wsdl:message name="QueueBuildSoapOut">
+    <wsdl:part name="parameters" element="tns:QueueBuildResponse" />
+  </wsdl:message>
+  <wsdl:message name="StopBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:StopBuilds" />
+  </wsdl:message>
+  <wsdl:message name="StopBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:StopBuildsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildAgentsSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateBuildAgents" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildAgentsSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateBuildAgentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildDefinitionsSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateBuildDefinitions" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildDefinitionsSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateBuildDefinitionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateBuildInformation" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateBuildInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateBuilds" />
+  </wsdl:message>
+  <wsdl:message name="UpdateBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateBuildsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateQueuedBuildsSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateQueuedBuilds" />
+  </wsdl:message>
+  <wsdl:message name="UpdateQueuedBuildsSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateQueuedBuildsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="BuildServiceSoap">
+    <wsdl:operation name="AddBuildAgents">
+      <wsdl:input message="tns:AddBuildAgentsSoapIn" />
+      <wsdl:output message="tns:AddBuildAgentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildDefinitions">
+      <wsdl:input message="tns:AddBuildDefinitionsSoapIn" />
+      <wsdl:output message="tns:AddBuildDefinitionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildQualities">
+      <wsdl:input message="tns:AddBuildQualitiesSoapIn" />
+      <wsdl:output message="tns:AddBuildQualitiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelBuilds">
+      <wsdl:input message="tns:CancelBuildsSoapIn" />
+      <wsdl:output message="tns:CancelBuildsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildAgents">
+      <wsdl:input message="tns:DeleteBuildAgentsSoapIn" />
+      <wsdl:output message="tns:DeleteBuildAgentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildDefinitions">
+      <wsdl:input message="tns:DeleteBuildDefinitionsSoapIn" />
+      <wsdl:output message="tns:DeleteBuildDefinitionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildQualities">
+      <wsdl:input message="tns:DeleteBuildQualitiesSoapIn" />
+      <wsdl:output message="tns:DeleteBuildQualitiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuilds">
+      <wsdl:input message="tns:DeleteBuildsSoapIn" />
+      <wsdl:output message="tns:DeleteBuildsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EvaluateSchedules">
+      <wsdl:input message="tns:EvaluateSchedulesSoapIn" />
+      <wsdl:output message="tns:EvaluateSchedulesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAffectedBuildDefinitions">
+      <wsdl:input message="tns:GetAffectedBuildDefinitionsSoapIn" />
+      <wsdl:output message="tns:GetAffectedBuildDefinitionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBuildQualities">
+      <wsdl:input message="tns:GetBuildQualitiesSoapIn" />
+      <wsdl:output message="tns:GetBuildQualitiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProcessChangeset">
+      <wsdl:input message="tns:ProcessChangesetSoapIn" />
+      <wsdl:output message="tns:ProcessChangesetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildAgentsByUri">
+      <wsdl:input message="tns:QueryBuildAgentsByUriSoapIn" />
+      <wsdl:output message="tns:QueryBuildAgentsByUriSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildDefinitionsByUri">
+      <wsdl:input message="tns:QueryBuildDefinitionsByUriSoapIn" />
+      <wsdl:output message="tns:QueryBuildDefinitionsByUriSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildGroups">
+      <wsdl:input message="tns:QueryBuildGroupsSoapIn" />
+      <wsdl:output message="tns:QueryBuildGroupsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuilds">
+      <wsdl:input message="tns:QueryBuildsSoapIn" />
+      <wsdl:output message="tns:QueryBuildsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildsByUri">
+      <wsdl:input message="tns:QueryBuildsByUriSoapIn" />
+      <wsdl:output message="tns:QueryBuildsByUriSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueue">
+      <wsdl:input message="tns:QueryBuildQueueSoapIn" />
+      <wsdl:output message="tns:QueryBuildQueueSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueueById">
+      <wsdl:input message="tns:QueryBuildQueueByIdSoapIn" />
+      <wsdl:output message="tns:QueryBuildQueueByIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="QueueBuild">
+      <wsdl:input message="tns:QueueBuildSoapIn" />
+      <wsdl:output message="tns:QueueBuildSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StopBuilds">
+      <wsdl:input message="tns:StopBuildsSoapIn" />
+      <wsdl:output message="tns:StopBuildsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildAgents">
+      <wsdl:input message="tns:UpdateBuildAgentsSoapIn" />
+      <wsdl:output message="tns:UpdateBuildAgentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildDefinitions">
+      <wsdl:input message="tns:UpdateBuildDefinitionsSoapIn" />
+      <wsdl:output message="tns:UpdateBuildDefinitionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildInformation">
+      <wsdl:input message="tns:UpdateBuildInformationSoapIn" />
+      <wsdl:output message="tns:UpdateBuildInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuilds">
+      <wsdl:input message="tns:UpdateBuildsSoapIn" />
+      <wsdl:output message="tns:UpdateBuildsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateQueuedBuilds">
+      <wsdl:input message="tns:UpdateQueuedBuildsSoapIn" />
+      <wsdl:output message="tns:UpdateQueuedBuildsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BuildServiceSoap" type="tns:BuildServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddBuildAgents">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildAgents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildDefinitions">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildQualities">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildQualities" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/CancelBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildAgents">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildAgents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildDefinitions">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildQualities">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildQualities" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EvaluateSchedules">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/EvaluateSchedules" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAffectedBuildDefinitions">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/GetAffectedBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBuildQualities">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/GetBuildQualities" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessChangeset">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/ProcessChangeset" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildAgentsByUri">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildAgentsByUri" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildDefinitionsByUri">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildDefinitionsByUri" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildGroups">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildGroups" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildsByUri">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildsByUri" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueue">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildQueue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueueById">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildQueueById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueueBuild">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueueBuild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StopBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/StopBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildAgents">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildAgents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildDefinitions">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildInformation">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateQueuedBuilds">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateQueuedBuilds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BuildServiceSoap12" type="tns:BuildServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddBuildAgents">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildAgents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildDefinitions">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddBuildQualities">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/AddBuildQualities" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/CancelBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildAgents">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildAgents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildDefinitions">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuildQualities">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuildQualities" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/DeleteBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EvaluateSchedules">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/EvaluateSchedules" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAffectedBuildDefinitions">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/GetAffectedBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBuildQualities">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/GetBuildQualities" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessChangeset">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/ProcessChangeset" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildAgentsByUri">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildAgentsByUri" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildDefinitionsByUri">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildDefinitionsByUri" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildGroups">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildGroups" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildsByUri">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildsByUri" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueue">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildQueue" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueryBuildQueueById">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBuildQueueById" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="QueueBuild">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueueBuild" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StopBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/StopBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildAgents">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildAgents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildDefinitions">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildDefinitions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuildInformation">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuildInformation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateQueuedBuilds">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/UpdateQueuedBuilds" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BuildService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Team Foundation Build web service</wsdl:documentation>
+    <wsdl:port name="BuildServiceSoap" binding="tns:BuildServiceSoap">
+      <soap:address location="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BuildServiceSoap12" binding="tns:BuildServiceSoap12">
+      <soap12:address location="http://rbiqhsappp007v:8080/build/v2.0/buildservice.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
