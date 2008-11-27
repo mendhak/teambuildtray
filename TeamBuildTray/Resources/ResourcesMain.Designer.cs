@@ -61,6 +61,24 @@ namespace Clyde.Rbi.TeamBuildTray.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide window.
+        /// </summary>
+        internal static string MainWindow_CloseTooltip {
+            get {
+                return ResourceManager.GetString("MainWindow_CloseTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter build list.
+        /// </summary>
+        internal static string MainWindow_ConfigureTooltip {
+            get {
+                return ResourceManager.GetString("MainWindow_ConfigureTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Team Build Tray.
         /// </summary>
         internal static string MainWindow_Title {

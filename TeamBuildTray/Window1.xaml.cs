@@ -51,7 +51,10 @@ namespace Clyde.Rbi.TeamBuildTray
         {
             InitializeComponent();
             SetIcon(IconColour.Grey);
-            NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
+            LabelMainTitle.Content = ResourcesMain.MainWindow_Title;
+            NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+            ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
+            ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
             notifierWindow.Show();
             notifierWindow.Hide();
@@ -307,7 +310,7 @@ namespace Clyde.Rbi.TeamBuildTray
                         iconChanged = true;
                         newMessages = true;
                         buildIdsAlertedInProgress.Add(build.Id);
-                        NotifyIconMainIcon.Text = LabelMainTitle.Content + " - Building";
+                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title +" - Building";
 
 
                         UpdateMainWindowItem(build.BuildDefinitionUri, BuildStatus.InProgress, build.RequestedBy);
@@ -346,7 +349,7 @@ namespace Clyde.Rbi.TeamBuildTray
                             }
                         }
 
-                        NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
+                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
 
                         notifierWindow.AddContent(message);
                         newMessages = true;

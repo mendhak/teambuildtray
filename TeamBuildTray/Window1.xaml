@@ -146,9 +146,9 @@
             			<ColumnDefinition Width="37.076"/>
             			<ColumnDefinition Width="33.095"/>
             		</Grid.ColumnDefinitions>
-            		<Button Style="{DynamicResource ButtonClose}" Width="15" Content="" HorizontalAlignment="Center" Click="Button_Click" Cursor="Hand" Height="15" Grid.Column="2" VerticalAlignment="Center"/>
+            		<Button Style="{DynamicResource ButtonClose}" Width="15" Content="" HorizontalAlignment="Center" Click="Button_Click" Cursor="Hand" Height="15" Grid.Column="2" VerticalAlignment="Center" Name="ButtonClose" />
             		<Label HorizontalAlignment="Left" Content="Jobs-o-matic Team Build Tray" FontSize="12" FontStyle="Normal" FontWeight="Bold" Foreground="#FFFFFFFF" Padding="0,0,0,0" x:Name="LabelMainTitle" VerticalAlignment="Center" Margin="10,0,0,0"/>
-            		<Button Style="{DynamicResource ButtonSearch}" Grid.Column="1" Click="ButtonSearch_Click" Width="15" Height="15" Cursor="Hand"/>
+            		<Button Style="{DynamicResource ButtonSearch}" Grid.Column="1" Click="ButtonSearch_Click" Width="15" Height="15" Cursor="Hand" Name="ButtonConfigure" />
             	</Grid>
             </Border>
         </Grid>
