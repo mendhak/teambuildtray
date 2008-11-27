@@ -1,8 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
@@ -14,8 +11,10 @@ namespace TeamBuildTray
     /// <summary>
     /// Interaction logic for FirstRunConfiguration.xaml
     /// </summary>
-    public partial class FirstRunConfiguration : Window
+    public partial class FirstRunConfiguration
     {
+        private bool projectListCached;
+
         public FirstRunConfiguration()
         {
             InitializeComponent();
@@ -62,8 +61,7 @@ namespace TeamBuildTray
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-
-            if (ValidEntries())
+            if ((ValidEntries()) && (ComboBoxProjects.SelectedValue != null))
             {
                 try
                 {
@@ -73,12 +71,12 @@ namespace TeamBuildTray
                     string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
 
                     Collection<TeamProject> projects = new Collection<TeamProject>();
-                    projects.Add(new TeamProject() { ProjectName = TextBoxProjectName.Text });
+                    projects.Add(new TeamProject { ProjectName = ComboBoxProjects.SelectedValue.ToString() });
 
                     //Save the server list
-                    List<TeamServer> servers = new List<TeamServer>() 
-                                            { 
-                                                new TeamServer() { Port = portNumber, ServerName = serverName, Protocol = protocol, Projects = projects} 
+                    List<TeamServer> servers = new List<TeamServer>
+                                                   { 
+                                                new TeamServer { Port = portNumber, ServerName = serverName, Protocol = protocol, Projects = projects} 
                                             };
 
                     XmlSerializer serializer = new XmlSerializer(typeof(List<TeamServer>));
@@ -88,13 +86,13 @@ namespace TeamBuildTray
                     fs.Close();
 
                     DialogResult = true;
-                    this.Close();
+                    Close();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Unable to write values to the configuration file.  The exception is: " + ex.Message);
                     DialogResult = false;
-                    this.Close();
+                    Close();
                 }
             }
 
@@ -106,6 +104,42 @@ namespace TeamBuildTray
             {
                 DragMove();
             }
+        }
+
+        private void ComboBoxProjects_DropDownOpened(object sender, EventArgs e)
+        {
+            if (ValidEntries())
+            {
+                string serverName = TextBoxServerName.Text;
+                int portNumber = int.Parse(TextBoxPortNumber.Text);
+                string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
+
+                if (!projectListCached)
+                {
+                    ComboBoxProjects.Items.Clear();
+                    var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
+                    foreach (var project in projectList)
+                    {
+                        ComboBoxProjects.Items.Add(project.Name);
+                    }
+                    projectListCached = true;
+                }
+            }
+        }
+
+        private void ServerValuesChanged(object sender, EventArgs e)
+        {
+            projectListCached = false;
+        }
+
+        private void TextBoxPortNumber_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBoxPortNumber.SelectAll();
+        }
+
+        private void TextBoxServerName_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBoxServerName.SelectAll();
         }
     }
 }

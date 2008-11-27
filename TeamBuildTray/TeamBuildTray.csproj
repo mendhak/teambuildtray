@@ -21,6 +21,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>http://localhost/TeamBuildTray/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -32,8 +33,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <ApplicationVersion>1.0.4.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -104,6 +104,13 @@
     <Content Include="Amber.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\CommonStructureService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CommonStructureService\configuration.svcinfo" />
+    <None Include="Service References\CommonStructureService\configuration91.svcinfo" />
+    <None Include="Service References\CommonStructureService\commonstructureservice.disco" />
     <Resource Include="search.png" />
     <None Include="Service References\TeamBuildService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
@@ -168,6 +175,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ResourcesMain.resx</DependentUpon>
     </Compile>
+    <Compile Include="Service References\CommonStructureService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\TeamBuildService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,9 +197,20 @@
       <LastGenOutput>ResourcesMain.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Properties\DataSources\System.Xml.XmlElement.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CommonStructureService\commonstructureservice.wsdl" />
+    <None Include="Service References\CommonStructureService\TeamBuildTray.CommonStructureService.NodeInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CommonStructureService\TeamBuildTray.CommonStructureService.ProjectInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CommonStructureService\TeamBuildTray.CommonStructureService.ProjectProperty.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\TeamBuildService\buildservice.wsdl" />
     <None Include="Service References\TeamBuildService\Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildAgent.datasource">
@@ -245,6 +268,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CommonStructureService\" />
     <WCFMetadataStorage Include="Service References\TeamBuildService\" />
   </ItemGroup>
   <ItemGroup>

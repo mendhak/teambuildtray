@@ -7,6 +7,7 @@ using TeamBuildTray.TeamBuildService;
 using System.Threading;
 using System.Reflection;
 using System.IO;
+using TeamBuildTray.CommonStructureService;
 
 namespace TeamBuildTray
 {
@@ -111,7 +112,16 @@ namespace TeamBuildTray
 
         private IconColour GetBuildList()
         {
-            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetEndpointAddress());
+            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
+            if (String.Compare(Protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+            else
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            }
+
             bool projectsFound = false;
             try
             {
@@ -169,14 +179,23 @@ namespace TeamBuildTray
 
         public event EventHandler<BuildQueryEventArgs> OnProjectsUpdated;
 
-        private EndpointAddress GetEndpointAddress()
+        private EndpointAddress GetBuildEndpointAddress()
         {
-            return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port.ToString() + "/build/v2.0/buildservice.asmx"));
+            return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port + "/build/v2.0/buildservice.asmx"));
         }
 
         private BuildQueryEventArgs QueryBuilds(IEnumerable<BuildDefinition> buildDefinitions)
         {
-            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetEndpointAddress());
+            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
+            if (String.Compare(Protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+            else
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            }
+
             var buildDetailSpecs = new List<BuildDetailSpec>();
             var buildQueueSpecs = new List<BuildQueueSpec>();
 
@@ -243,7 +262,7 @@ namespace TeamBuildTray
 
         public void QueueBuild(string agentUri, string buildUri, string dropLocation)
         {
-            BuildServiceSoapClient soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetEndpointAddress());
+            BuildServiceSoapClient soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
             BuildRequest request = new BuildRequest
             {
                 BuildAgentUri = agentUri,
@@ -252,6 +271,34 @@ namespace TeamBuildTray
             };
 
             soapClient.QueueBuild(request, QueueOptions.None);
+        }
+
+        public static List<ProjectInfo> GetProjectList(string protocol, string serverName, int port)
+        {
+            try
+            {
+                ClassificationSoapClient soapClient = new ClassificationSoapClient("ClassificationSoap",
+                                                                                   new EndpointAddress(
+                                                                                       new Uri(protocol + "://" +
+                                                                                               serverName +
+                                                                                               ":" + port +
+                                                                                               "/services/v1.0/commonstructureservice.asmx")));
+
+                if (String.Compare(protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    ((BasicHttpBinding) soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+                }
+                else
+                {
+                    ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+                }
+
+                return soapClient.ListProjects();
+            }
+            catch
+            {
+                return new List<ProjectInfo>();
+            }
         }
     }
 }

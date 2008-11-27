@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Team Foundation Classification web service</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03">
+      <s:element name="CreateProject">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="structure">
+              <s:complexType>
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateProjectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateProjectResult" type="tns:ProjectInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ProjectInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Uri" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:ProjectState" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ProjectState">
+        <s:restriction base="s:string">
+          <s:enumeration value="New" />
+          <s:enumeration value="WellFormed" />
+          <s:enumeration value="Deleting" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="DeleteProject">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteProjectResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetProjectProperties">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectPropertiesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="templateId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="properties" type="tns:ArrayOfProjectProperty" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfProjectProperty">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ProjectProperty" nillable="true" type="tns:ProjectProperty" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ProjectProperty">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateProjectProperties">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="properties" type="tns:ArrayOfProjectProperty" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateProjectPropertiesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetProject">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetProjectResult" type="tns:ProjectInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectFromName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectFromNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetProjectFromNameResult" type="tns:ProjectInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListProjects">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListProjectsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListProjectsResult" type="tns:ArrayOfProjectInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfProjectInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ProjectInfo" nillable="true" type="tns:ProjectInfo" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ListAllProjects">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListAllProjectsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListAllProjectsResult" type="tns:ArrayOfProjectInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListStructures">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListStructuresResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListStructuresResult" type="tns:ArrayOfNodeInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfNodeInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="NodeInfo" nillable="true" type="tns:NodeInfo" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="NodeInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Uri" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Path" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StructureType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Properties" type="tns:ArrayOfProperty" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParentUri" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProjectUri" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfProperty">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Property" nillable="true" type="tns:Property" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Property">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetNodesXml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUris" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="childNodes" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetNodesXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNodesXmlResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="parentNodeUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateNodeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RenameNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUri" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newNodeName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RenameNodeResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="MoveBranch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUri" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newParentNodeUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MoveBranchResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ReorderNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUri" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="moveBy" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReorderNodeResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="DeleteBranches">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUris" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="reclassifyUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteBranchesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetDeletedNodesXml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectUri" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="since" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDeletedNodesXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDeletedNodesXmlResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodeUri" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNodeResult" type="tns:NodeInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNodeFromPath">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nodePath" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNodeFromPathResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNodeFromPathResult" type="tns:NodeInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChangedNodes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="firstSequenceId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChangedNodesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetChangedNodesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateProjectSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateProject" />
+  </wsdl:message>
+  <wsdl:message name="CreateProjectSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProjectSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteProject" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProjectSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectPropertiesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProjectProperties" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectPropertiesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProjectPropertiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateProjectPropertiesSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateProjectProperties" />
+  </wsdl:message>
+  <wsdl:message name="UpdateProjectPropertiesSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateProjectPropertiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProject" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectFromNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProjectFromName" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectFromNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProjectFromNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListProjectsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListProjects" />
+  </wsdl:message>
+  <wsdl:message name="ListProjectsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListProjectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListAllProjectsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListAllProjects" />
+  </wsdl:message>
+  <wsdl:message name="ListAllProjectsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListAllProjectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListStructuresSoapIn">
+    <wsdl:part name="parameters" element="tns:ListStructures" />
+  </wsdl:message>
+  <wsdl:message name="ListStructuresSoapOut">
+    <wsdl:part name="parameters" element="tns:ListStructuresResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNodesXmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNodesXml" />
+  </wsdl:message>
+  <wsdl:message name="GetNodesXmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNodesXmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateNode" />
+  </wsdl:message>
+  <wsdl:message name="CreateNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="RenameNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:RenameNode" />
+  </wsdl:message>
+  <wsdl:message name="RenameNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:RenameNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="MoveBranchSoapIn">
+    <wsdl:part name="parameters" element="tns:MoveBranch" />
+  </wsdl:message>
+  <wsdl:message name="MoveBranchSoapOut">
+    <wsdl:part name="parameters" element="tns:MoveBranchResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReorderNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:ReorderNode" />
+  </wsdl:message>
+  <wsdl:message name="ReorderNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:ReorderNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBranchesSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteBranches" />
+  </wsdl:message>
+  <wsdl:message name="DeleteBranchesSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteBranchesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDeletedNodesXmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDeletedNodesXml" />
+  </wsdl:message>
+  <wsdl:message name="GetDeletedNodesXmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDeletedNodesXmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNode" />
+  </wsdl:message>
+  <wsdl:message name="GetNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNodeFromPathSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNodeFromPath" />
+  </wsdl:message>
+  <wsdl:message name="GetNodeFromPathSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNodeFromPathResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetChangedNodesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetChangedNodes" />
+  </wsdl:message>
+  <wsdl:message name="GetChangedNodesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetChangedNodesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ClassificationSoap">
+    <wsdl:operation name="CreateProject">
+      <wsdl:input message="tns:CreateProjectSoapIn" />
+      <wsdl:output message="tns:CreateProjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <wsdl:input message="tns:DeleteProjectSoapIn" />
+      <wsdl:output message="tns:DeleteProjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectProperties">
+      <wsdl:input message="tns:GetProjectPropertiesSoapIn" />
+      <wsdl:output message="tns:GetProjectPropertiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProjectProperties">
+      <wsdl:input message="tns:UpdateProjectPropertiesSoapIn" />
+      <wsdl:output message="tns:UpdateProjectPropertiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProject">
+      <wsdl:input message="tns:GetProjectSoapIn" />
+      <wsdl:output message="tns:GetProjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectFromName">
+      <wsdl:input message="tns:GetProjectFromNameSoapIn" />
+      <wsdl:output message="tns:GetProjectFromNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListProjects">
+      <wsdl:input message="tns:ListProjectsSoapIn" />
+      <wsdl:output message="tns:ListProjectsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListAllProjects">
+      <wsdl:input message="tns:ListAllProjectsSoapIn" />
+      <wsdl:output message="tns:ListAllProjectsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListStructures">
+      <wsdl:input message="tns:ListStructuresSoapIn" />
+      <wsdl:output message="tns:ListStructuresSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNodesXml">
+      <wsdl:input message="tns:GetNodesXmlSoapIn" />
+      <wsdl:output message="tns:GetNodesXmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateNode">
+      <wsdl:input message="tns:CreateNodeSoapIn" />
+      <wsdl:output message="tns:CreateNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <wsdl:input message="tns:RenameNodeSoapIn" />
+      <wsdl:output message="tns:RenameNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MoveBranch">
+      <wsdl:input message="tns:MoveBranchSoapIn" />
+      <wsdl:output message="tns:MoveBranchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReorderNode">
+      <wsdl:input message="tns:ReorderNodeSoapIn" />
+      <wsdl:output message="tns:ReorderNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBranches">
+      <wsdl:input message="tns:DeleteBranchesSoapIn" />
+      <wsdl:output message="tns:DeleteBranchesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDeletedNodesXml">
+      <wsdl:input message="tns:GetDeletedNodesXmlSoapIn" />
+      <wsdl:output message="tns:GetDeletedNodesXmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNode">
+      <wsdl:input message="tns:GetNodeSoapIn" />
+      <wsdl:output message="tns:GetNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNodeFromPath">
+      <wsdl:input message="tns:GetNodeFromPathSoapIn" />
+      <wsdl:output message="tns:GetNodeFromPathSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetChangedNodes">
+      <wsdl:input message="tns:GetChangedNodesSoapIn" />
+      <wsdl:output message="tns:GetChangedNodesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ClassificationSoap" type="tns:ClassificationSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateProject">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/CreateProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/DeleteProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectProperties">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProjectProperties" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProjectProperties">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/UpdateProjectProperties" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProject">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectFromName">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProjectFromName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListProjects">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListProjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListAllProjects">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListAllProjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListStructures">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListStructures" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNodesXml">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNodesXml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNode">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/CreateNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/RenameNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MoveBranch">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/MoveBranch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReorderNode">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ReorderNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBranches">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/DeleteBranches" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDeletedNodesXml">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetDeletedNodesXml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNode">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNodeFromPath">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNodeFromPath" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChangedNodes">
+      <soap:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetChangedNodes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ClassificationSoap12" type="tns:ClassificationSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateProject">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/CreateProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/DeleteProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectProperties">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProjectProperties" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProjectProperties">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/UpdateProjectProperties" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProject">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectFromName">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetProjectFromName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListProjects">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListAllProjects">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListAllProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListStructures">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ListStructures" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNodesXml">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNodesXml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNode">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/CreateNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/RenameNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MoveBranch">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/MoveBranch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReorderNode">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/ReorderNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteBranches">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/DeleteBranches" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDeletedNodesXml">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetDeletedNodesXml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNode">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNodeFromPath">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetNodeFromPath" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChangedNodes">
+      <soap12:operation soapAction="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03/GetChangedNodes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Classification">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Team Foundation Classification web service</wsdl:documentation>
+    <wsdl:port name="ClassificationSoap" binding="tns:ClassificationSoap">
+      <soap:address location="https://www.example.com/services/v1.0/commonstructureservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ClassificationSoap12" binding="tns:ClassificationSoap12">
+      <soap12:address location="https://www.example.com/services/v1.0/commonstructureservice.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

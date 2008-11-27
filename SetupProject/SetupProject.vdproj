@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_455DB0E28E2F09F6D6081088A82BEA28"
-        "OwnerKey" = "8:_89382DD932F541ED91E607565CCA01AD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_766898B2E0C24E378602758845F6DDCF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -35,12 +29,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_89382DD932F541ED91E607565CCA01AD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_455DB0E28E2F09F6D6081088A82BEA28"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,37 +136,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_455DB0E28E2F09F6D6081088A82BEA28"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WPFTaskbarNotifier, Version=1.0.3253.18836, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_455DB0E28E2F09F6D6081088A82BEA28"
-                    {
-                    "Name" = "8:WPFTaskbarNotifier.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:WPFTaskbarNotifier.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_52E87ED88B95414989A4A16F7A30851B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_766898B2E0C24E378602758845F6DDCF"
             {
             "SourcePath" = "8:..\\TeamBuildTray\\app.ico"
@@ -273,7 +230,7 @@
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.3"
+        "ProductVersion" = "8:1.0.4"
         "Manufacturer" = "8:Clyde Balneaves"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

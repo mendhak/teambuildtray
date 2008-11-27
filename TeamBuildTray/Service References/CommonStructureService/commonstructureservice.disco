@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://www.example.com/services/v1.0/commonstructureservice.asmx?wsdl" docRef="https://www.example.com/services/v1.0/commonstructureservice.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://www.example.com/services/v1.0/commonstructureservice.asmx" xmlns:q1="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03" binding="q1:ClassificationSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://www.example.com/services/v1.0/commonstructureservice.asmx" xmlns:q2="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Classification/03" binding="q2:ClassificationSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
