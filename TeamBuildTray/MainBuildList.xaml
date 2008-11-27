@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WPFTaskbarNotifier="clr-namespace:WPFTaskbarNotifier;assembly=WPFTaskbarNotifier" x:Class="TeamBuildTray.MainBuildList"
-    Title="Team Build Tray" Height="300" Width="600" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowState="Normal" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="window" xmlns:_TeamBuildTray="clr-namespace:TeamBuildTray" Icon="Green.ico" WindowStyle="None" MinWidth="600" MinHeight="300">
+    Title="Team Build Tray" Height="300" Width="600" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" WindowState="Normal" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="window" xmlns:TeamBuildTray="clr-namespace:TeamBuildTray" Icon="Green.ico" WindowStyle="None" MinWidth="600" MinHeight="300">
 
     <Window.Resources>
-        <_TeamBuildTray:BuildStatusConverter x:Key="BuildStatusConverter"/>
-        <_TeamBuildTray:BuildVisibilityConverter x:Key="BuildVisibilityConverter"/>
+        <TeamBuildTray:BuildStatusConverter x:Key="BuildStatusConverter"/>
+        <TeamBuildTray:BuildVisibilityConverter x:Key="BuildVisibilityConverter"/>
         <DataTemplate x:Key="BuildContentTemplate">
             <ItemsControl ItemsSource="{Binding}">
                 <ItemsControl.ItemTemplate>

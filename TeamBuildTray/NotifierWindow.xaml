@@ -5,10 +5,10 @@
 	x:Class="TeamBuildTray.NotifierWindow"
 	x:Name="Window"
 	Title=""
-	Width="326" Height="67" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="None" BorderBrush="{x:Null}" BorderThickness="1,1,1,1" Topmost="True" xmlns:_TeamBuildTray="clr-namespace:TeamBuildTray" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	Width="326" Height="67" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="None" BorderBrush="{x:Null}" BorderThickness="1,1,1,1" Topmost="True" xmlns:TeamBuildTray="clr-namespace:TeamBuildTray" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 	
 	<tn:TaskbarNotifier.Resources>
-	        <_TeamBuildTray:BuildStatusConverter x:Key="BuildStatusConverter"/>
+	        <TeamBuildTray:BuildStatusConverter x:Key="BuildStatusConverter"/>
 
 	    <DataTemplate x:Key="NotifyContentTemplate">
 	    	<ItemsControl ItemsSource="{Binding}">
