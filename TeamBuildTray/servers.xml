@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ArrayOfTeamServer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <TeamServer>
+  <!--<TeamServer>
     <Protocol>http</Protocol>
     <ServerName>rbiqhsappp007v</ServerName>
     <Port>8080</Port>
@@ -9,5 +9,5 @@
         <ProjectName>Jobs</ProjectName>
       </TeamProject>
     </Projects>
-  </TeamServer>
+  </TeamServer>-->
 </ArrayOfTeamServer>

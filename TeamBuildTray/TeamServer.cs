@@ -5,12 +5,14 @@ using System.Globalization;
 using System.ServiceModel;
 using Clyde.Rbi.TeamBuildTray.TeamBuildService;
 using System.Threading;
+using System.Reflection;
+using System.IO;
 
 namespace Clyde.Rbi.TeamBuildTray
 {
     public class TeamServer
     {
-        private readonly Collection<TeamProject> projects = new Collection<TeamProject>();
+        private Collection<TeamProject> projects = new Collection<TeamProject>();
         public string ServerName { get; set; }
         public int Port { get; set; }
         public string Protocol { get; set; }
@@ -21,7 +23,25 @@ namespace Clyde.Rbi.TeamBuildTray
         public Collection<TeamProject> Projects
         {
             get { return projects; }
+            set { projects = value; }
         }
+
+
+        public static string ServerConfigurationPath
+        {
+            get
+            {
+                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "servers.xml");
+            }
+        }
+        public static string BuildListConfigurationPath
+        {
+            get
+            {
+                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "hiddenbuilds.xml");
+            }
+        }
+
 
         public BuildDefinition GetDefinitionByUri(string uri)
         {

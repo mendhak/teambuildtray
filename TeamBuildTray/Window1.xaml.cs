@@ -51,10 +51,7 @@ namespace Clyde.Rbi.TeamBuildTray
         {
             InitializeComponent();
             SetIcon(IconColour.Grey);
-            LabelMainTitle.Content = ResourcesMain.MainWindow_Title;
-            NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
-            ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
-            ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
+            NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
             notifierWindow.Show();
             notifierWindow.Hide();
@@ -62,20 +59,7 @@ namespace Clyde.Rbi.TeamBuildTray
             LoadConfiguration();
         }
 
-        private static string serverConfigurationPath
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "servers.xml");
-            }
-        }
-        private static string buildListConfigurationPath
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "hiddenbuilds.xml");
-            }
-        }
+      
 
         /// <summary>
         /// A collection of StatusMessages that the main window can add to.
@@ -94,7 +78,7 @@ namespace Clyde.Rbi.TeamBuildTray
 
         private void LoadConfiguration()
         {
-            if (File.Exists(serverConfigurationPath))
+            if (File.Exists(TeamServer.ServerConfigurationPath))
             {
                 try
                 {
@@ -108,16 +92,13 @@ namespace Clyde.Rbi.TeamBuildTray
                 }
                 catch (Exception)
                 {
-
                     servers = new List<TeamServer>();
                 }
             }
             else
             {
-
                 RunConfigurationWindow();
                 servers = GetServersFromConfigurationFile();
-
             }
 
             //Add servers to menu
@@ -159,7 +140,7 @@ namespace Clyde.Rbi.TeamBuildTray
         private List<TeamServer> GetServersFromConfigurationFile()
         {
             var serializer = new XmlSerializer(typeof(List<TeamServer>));
-            FileStream fs = File.OpenRead(serverConfigurationPath);
+            FileStream fs = File.OpenRead(TeamServer.ServerConfigurationPath);
             List<TeamServer> teamServers = serializer.Deserialize(fs) as List<TeamServer>;
             fs.Close();
             return teamServers;
@@ -168,12 +149,12 @@ namespace Clyde.Rbi.TeamBuildTray
         private static void LoadHiddenBuilds()
         {
             //Load hidden builds
-            if (File.Exists(buildListConfigurationPath))
+            if (File.Exists(TeamServer.BuildListConfigurationPath))
             {
                 try
                 {
                     var serializer = new XmlSerializer(typeof(List<string>));
-                    FileStream fs = File.OpenRead(buildListConfigurationPath);
+                    FileStream fs = File.OpenRead(TeamServer.BuildListConfigurationPath);
                     hiddenFields = serializer.Deserialize(fs) as List<string>;
                     fs.Close();
 
@@ -335,7 +316,7 @@ namespace Clyde.Rbi.TeamBuildTray
                         iconChanged = true;
                         newMessages = true;
                         buildIdsAlertedInProgress.Add(build.Id);
-                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title +" - Building";
+                        NotifyIconMainIcon.Text = LabelMainTitle.Content + " - Building";
 
 
                         UpdateMainWindowItem(build.BuildDefinitionUri, BuildStatus.InProgress, build.RequestedBy);
@@ -374,7 +355,7 @@ namespace Clyde.Rbi.TeamBuildTray
                             }
                         }
 
-                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+                        NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
 
                         notifierWindow.AddContent(message);
                         newMessages = true;
@@ -492,17 +473,10 @@ namespace Clyde.Rbi.TeamBuildTray
             if (notifierWindow != null)
                 notifierWindow.Close();
 
-            //Save the server list
-            var serializer = new XmlSerializer(typeof(List<TeamServer>));
-            FileStream fs = File.Open(serverConfigurationPath, FileMode.Create, FileAccess.Write,
-                                      FileShare.ReadWrite);
-            serializer.Serialize(fs, servers);
-            fs.Close();
-
 
             //Save the hidden builds list
-            serializer = new XmlSerializer(typeof(List<string>));
-            fs = File.Open(buildListConfigurationPath, FileMode.Create, FileAccess.Write,
+            var serializer = new XmlSerializer(typeof(List<string>));
+            FileStream fs = File.Open(TeamServer.BuildListConfigurationPath, FileMode.Create, FileAccess.Write,
                                       FileShare.ReadWrite);
             serializer.Serialize(fs, HiddenBuilds);
             fs.Close();
