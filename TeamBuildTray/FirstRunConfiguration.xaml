@@ -1,7 +1,7 @@
-﻿<Window x:Class="Clyde.Rbi.TeamBuildTray.FirstRunConfiguration"
+﻿<Window x:Class="TeamBuildTray.FirstRunConfiguration"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Add a Team Foundation Server" Height="210" Width="323" x:Name="FirstRunConfigurationWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" AllowsTransparency="True" ShowInTaskbar="False" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+    Title="Add a Team Foundation Server" Height="210" Width="323" x:Name="FirstRunConfigurationWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" AllowsTransparency="True" ShowInTaskbar="True" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 	<Border Width="Auto" Height="Auto" Background="{DynamicResource BrushMainGradient}" CornerRadius="5,5,5,5" MouseDown="Border_MouseDown">
 		<Grid Height="Auto" Width="Auto" d:IsLocked="True">
 			<Grid.RowDefinitions>

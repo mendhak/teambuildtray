@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using TeamBuildTray.TeamBuildService;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     /// <summary>
     /// 

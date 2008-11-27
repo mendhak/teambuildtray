@@ -11,12 +11,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using TeamBuildTray.TeamBuildService;
 using System.Globalization;
-using Clyde.Rbi.TeamBuildTray.Resources;
-using System.Reflection;
+using TeamBuildTray.Resources;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public partial class Window1
     {
@@ -51,7 +50,10 @@ namespace Clyde.Rbi.TeamBuildTray
         {
             InitializeComponent();
             SetIcon(IconColour.Grey);
-            NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
+            NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+            LabelMainTitle.Content = ResourcesMain.MainWindow_Title;
+            ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
+            ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
             notifierWindow.Show();
             notifierWindow.Hide();
@@ -130,14 +132,13 @@ namespace Clyde.Rbi.TeamBuildTray
             //If the user pressed cancel or closed the window, don't let them continue.
             if (firstRunHasRun.HasValue && firstRunHasRun.Value == false)
             {
-                firstRun = null;
-                this.Close();
+                Close();
                 Environment.Exit(0);
             }   
         }
 
 
-        private List<TeamServer> GetServersFromConfigurationFile()
+        private static List<TeamServer> GetServersFromConfigurationFile()
         {
             var serializer = new XmlSerializer(typeof(List<TeamServer>));
             FileStream fs = File.OpenRead(TeamServer.ServerConfigurationPath);
@@ -316,7 +317,7 @@ namespace Clyde.Rbi.TeamBuildTray
                         iconChanged = true;
                         newMessages = true;
                         buildIdsAlertedInProgress.Add(build.Id);
-                        NotifyIconMainIcon.Text = LabelMainTitle.Content + " - Building";
+                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title + " - Building";
 
 
                         UpdateMainWindowItem(build.BuildDefinitionUri, BuildStatus.InProgress, build.RequestedBy);
@@ -355,7 +356,7 @@ namespace Clyde.Rbi.TeamBuildTray
                             }
                         }
 
-                        NotifyIconMainIcon.Text = LabelMainTitle.Content.ToString();
+                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
 
                         notifierWindow.AddContent(message);
                         newMessages = true;

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
-using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using TeamBuildTray.TeamBuildService;
 using System.Globalization;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public class TeamProject
     {

@@ -8,7 +8,7 @@
     <ProjectGuid>{FF7493B5-DBF7-47C3-91A3-EE1B2DAAAC45}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Clyde.Rbi.TeamBuildTray</RootNamespace>
+    <RootNamespace>TeamBuildTray</RootNamespace>
     <AssemblyName>TeamBuildTray</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -160,6 +160,7 @@
     <Compile Include="Service References\TeamBuildService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="StatusMessage.cs" />
     <Compile Include="TeamProject.cs" />
@@ -194,7 +195,31 @@
     </None>
     <None Include="Service References\TeamBuildService\Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildQueueQueryResult.datasource">
     </None>
-    <None Include="Service References\TeamBuildService\Clyde.Rbi.TeamBuildTray.TeamBuildService.QueuedBuild.datasource">
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildAgent.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildDefinition.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildDeletionResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildDetail.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildGroupQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildInformationNode.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.BuildQueueQueryResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TeamBuildService\TeamBuildTray.TeamBuildService.QueuedBuild.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <AppDesigner Include="Properties\" />

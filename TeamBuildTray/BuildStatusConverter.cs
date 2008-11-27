@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using TeamBuildTray.TeamBuildService;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     [ValueConversion(typeof (BuildStatus), typeof (Uri))]
     public class BuildStatusConverter : IValueConverter

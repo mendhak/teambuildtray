@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     [ValueConversion(typeof (string), typeof (bool))]
     public class BuildVisibilityConverter : IValueConverter

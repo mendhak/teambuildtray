@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
+namespace TeamBuildTray.TeamBuildService {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -111,7 +111,7 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(QueryResult))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BuildGroupItem))]
-        Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildGroupQueryResult QueryBuildDefinitionsByUri(string[] uris);
+        TeamBuildTray.TeamBuildService.BuildGroupQueryResult QueryBuildDefinitionsByUri(string[] uris);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBu" +
             "ildGroups", ReplyAction="*")]
@@ -132,7 +132,7 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(QueryResult))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BuildGroupItem))]
-        Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildQueryResult QueryBuildsByUri(string[] uris, string[] informationTypes, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueryOptions options);
+        TeamBuildTray.TeamBuildService.BuildQueryResult QueryBuildsByUri(string[] uris, string[] informationTypes, TeamBuildTray.TeamBuildService.QueryOptions options);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueryBu" +
             "ildQueue", ReplyAction="*")]
@@ -146,14 +146,14 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(QueryResult))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BuildGroupItem))]
-        Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildQueueQueryResult QueryBuildQueueById(int[] ids, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueryOptions options);
+        TeamBuildTray.TeamBuildService.BuildQueueQueryResult QueryBuildQueueById(int[] ids, TeamBuildTray.TeamBuildService.QueryOptions options);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/QueueBu" +
             "ild", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(QueryResult))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BuildGroupItem))]
-        Clyde.Rbi.TeamBuildTray.TeamBuildService.QueuedBuild QueueBuild(Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildRequest buildRequest, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueueOptions options);
+        TeamBuildTray.TeamBuildService.QueuedBuild QueueBuild(TeamBuildTray.TeamBuildService.BuildRequest buildRequest, TeamBuildTray.TeamBuildService.QueueOptions options);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/TeamFoundation/2005/06/Build/BuildService/03/StopBui" +
             "lds", ReplyAction="*")]
@@ -3130,12 +3130,12 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
-    public interface BuildServiceSoapChannel : Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildServiceSoap, System.ServiceModel.IClientChannel {
+    public interface BuildServiceSoapChannel : TeamBuildTray.TeamBuildService.BuildServiceSoap, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
-    public partial class BuildServiceSoapClient : System.ServiceModel.ClientBase<Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildServiceSoap>, Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildServiceSoap {
+    public partial class BuildServiceSoapClient : System.ServiceModel.ClientBase<TeamBuildTray.TeamBuildService.BuildServiceSoap>, TeamBuildTray.TeamBuildService.BuildServiceSoap {
         
         public BuildServiceSoapClient() {
         }
@@ -3208,7 +3208,7 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
             return base.Channel.QueryBuildAgentsByUri(uris);
         }
         
-        public Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildGroupQueryResult QueryBuildDefinitionsByUri(string[] uris) {
+        public TeamBuildTray.TeamBuildService.BuildGroupQueryResult QueryBuildDefinitionsByUri(string[] uris) {
             return base.Channel.QueryBuildDefinitionsByUri(uris);
         }
         
@@ -3220,7 +3220,7 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
             return base.Channel.QueryBuilds(specs);
         }
         
-        public Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildQueryResult QueryBuildsByUri(string[] uris, string[] informationTypes, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueryOptions options) {
+        public TeamBuildTray.TeamBuildService.BuildQueryResult QueryBuildsByUri(string[] uris, string[] informationTypes, TeamBuildTray.TeamBuildService.QueryOptions options) {
             return base.Channel.QueryBuildsByUri(uris, informationTypes, options);
         }
         
@@ -3228,11 +3228,11 @@ namespace Clyde.Rbi.TeamBuildTray.TeamBuildService {
             return base.Channel.QueryBuildQueue(specs);
         }
         
-        public Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildQueueQueryResult QueryBuildQueueById(int[] ids, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueryOptions options) {
+        public TeamBuildTray.TeamBuildService.BuildQueueQueryResult QueryBuildQueueById(int[] ids, TeamBuildTray.TeamBuildService.QueryOptions options) {
             return base.Channel.QueryBuildQueueById(ids, options);
         }
         
-        public Clyde.Rbi.TeamBuildTray.TeamBuildService.QueuedBuild QueueBuild(Clyde.Rbi.TeamBuildTray.TeamBuildService.BuildRequest buildRequest, Clyde.Rbi.TeamBuildTray.TeamBuildService.QueueOptions options) {
+        public TeamBuildTray.TeamBuildService.QueuedBuild QueueBuild(TeamBuildTray.TeamBuildService.BuildRequest buildRequest, TeamBuildTray.TeamBuildService.QueueOptions options) {
             return base.Channel.QueueBuild(buildRequest, options);
         }
         

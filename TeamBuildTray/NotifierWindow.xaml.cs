@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Documents;
-using Clyde.Rbi.TeamBuildTray.Resources;
+using TeamBuildTray.Resources;
 using System.Diagnostics;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public partial class NotifierWindow
     {

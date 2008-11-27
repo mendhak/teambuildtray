@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     /// <summary>
     /// Interaction logic for FirstRunConfiguration.xaml

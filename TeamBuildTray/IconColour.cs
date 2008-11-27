@@ -1,4 +1,4 @@
-﻿namespace Clyde.Rbi.TeamBuildTray
+﻿namespace TeamBuildTray
 {
     public enum IconColour
     {

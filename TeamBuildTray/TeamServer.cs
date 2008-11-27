@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.ServiceModel;
-using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+using TeamBuildTray.TeamBuildService;
 using System.Threading;
 using System.Reflection;
 using System.IO;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public class TeamServer
     {

@@ -1,6 +1,6 @@
-﻿using Clyde.Rbi.TeamBuildTray.TeamBuildService;
+﻿using TeamBuildTray.TeamBuildService;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public static class BuildDefinitionExtension
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Clyde.Rbi.TeamBuildTray
+namespace TeamBuildTray
 {
     public class StatusMessage
     {
