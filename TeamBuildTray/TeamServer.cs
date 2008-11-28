@@ -186,7 +186,7 @@ namespace TeamBuildTray
 
         private BuildQueryEventArgs QueryBuilds(IEnumerable<BuildDefinition> buildDefinitions)
         {
-            var soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
+            BuildServiceSoapClient soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
             if (String.Compare(Protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
@@ -196,13 +196,13 @@ namespace TeamBuildTray
                 ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
             }
 
-            var buildDetailSpecs = new List<BuildDetailSpec>();
-            var buildQueueSpecs = new List<BuildQueueSpec>();
+            List<BuildDetailSpec> buildDetailSpecs = new List<BuildDetailSpec>();
+            List<BuildQueueSpec> buildQueueSpecs = new List<BuildQueueSpec>();
 
             //Do queries
             foreach (BuildDefinition definition in buildDefinitions)
             {
-                var buildDetailSpec = new BuildDetailSpec
+                BuildDetailSpec buildDetailSpec = new BuildDetailSpec
                 {
                     BuildNumber = "*",
                     DefinitionPath = definition.FullPath,
@@ -287,6 +287,7 @@ namespace TeamBuildTray
                 if (String.Compare(protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     ((BasicHttpBinding) soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+                    
                 }
                 else
                 {
