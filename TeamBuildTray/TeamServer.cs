@@ -43,12 +43,25 @@ namespace TeamBuildTray
             set;
         }
 
+        public static string ApplicationConfigurationPath
+        {
+            get
+            {
+                string applicationDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TeamBuildTray");
+                if (!Directory.Exists(applicationDataPath))
+                {
+                    Directory.CreateDirectory(applicationDataPath);
+                }
+
+                return applicationDataPath;
+            }
+        }
 
         public static string ServerConfigurationPath
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "servers.xml");
+                return Path.Combine(ApplicationConfigurationPath, "servers.xml");
             }
         }
 
@@ -56,7 +69,7 @@ namespace TeamBuildTray
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "hiddenbuilds.xml");
+                return Path.Combine(ApplicationConfigurationPath, "hiddenbuilds.xml");
             }
         }
 
