@@ -136,7 +136,7 @@
     <value>{0} started {1} build</value>
   </data>
   <data name="NotifierWindow_NoDefinitions" xml:space="preserve">
-    <value>No definitions found due to incorrect project name or permissions.  Builds, you no haz it</value>
+    <value>No definitions found due to incorrect project name or insufficient permissions.</value>
   </data>
   <data name="NotifierWindow_Queued" xml:space="preserve">
     <value>{0} queued {1}</value>

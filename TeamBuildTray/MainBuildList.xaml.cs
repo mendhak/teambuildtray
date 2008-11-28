@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using TeamBuildTray.TeamBuildService;
 using System.Globalization;
 using TeamBuildTray.Resources;
+using System.Reflection;
 
 namespace TeamBuildTray
 {
@@ -51,10 +52,15 @@ namespace TeamBuildTray
         {
             InitializeComponent();
             SetIcon(IconColour.Grey);
+
             NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+
+            //Set the main title
             LabelMainTitle.Content = ResourcesMain.MainWindow_Title;
+
             ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
             ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
+
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
             notifierWindow.Show();
             notifierWindow.Hide();
@@ -104,19 +110,18 @@ namespace TeamBuildTray
                 servers = GetServersFromConfigurationFile();
             }
 
-            //Add servers to menu
+            //Add version as menu item
+            MenuItem versionMenuItem = new MenuItem {Header = "Version : " + Assembly.GetExecutingAssembly().GetName().Version};
+            NotifyIconMainIcon.ContextMenu.Items.Insert(0, versionMenuItem);
+            NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
+
+            //Attach to server events
             foreach (TeamServer server in servers)
             {
-                MenuItem menuItem = new MenuItem { Header = server.ServerName + ":" + server.Port };
-                NotifyIconMainIcon.ContextMenu.Items.Insert(0, menuItem);
-
                 server.OnProjectsUpdated += Server_OnProjectsUpdated;
             }
-            if (servers.Count > 0)
-            {
-                NotifyIconMainIcon.ContextMenu.Items.Insert(servers.Count, new Separator());
-            }
 
+            //Open xml file of builds to hide
             LoadHiddenBuilds();
 
             InitializeServers();
@@ -133,7 +138,7 @@ namespace TeamBuildTray
             //If the user pressed cancel or closed the window, don't let them continue.
             if (firstRunHasRun.HasValue && firstRunHasRun.Value == false)
             {
-                this.Close();
+                Close();
                 Environment.Exit(0);
             }   
         }
@@ -511,6 +516,12 @@ namespace TeamBuildTray
 
         private void NotifyIconExit_Click(object sender, RoutedEventArgs e)
         {
+            //Cleare up servers
+            foreach (TeamServer server in servers)
+            {
+                server.Dispose();
+            }
+
             // Close this window.
             exitButtonClicked = true;
             Close();

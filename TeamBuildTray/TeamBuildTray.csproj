@@ -153,6 +153,7 @@
     <Compile Include="FirstRunConfiguration.xaml.cs">
       <DependentUpon>FirstRunConfiguration.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IconColour.cs" />
     <Compile Include="MainBuildList.xaml.cs">
       <DependentUpon>MainBuildList.xaml</DependentUpon>

@@ -11,28 +11,28 @@ using TeamBuildTray.CommonStructureService;
 
 namespace TeamBuildTray
 {
-    public class TeamServer
+    public class TeamServer : IDisposable
     {
         private Timer queryTimer;
         public static readonly int IntervalTimeInSeconds = 5;
+        private bool disposed;
 
-
-        public string ServerName 
-        { 
-            get; 
-            set; 
+        public string ServerName
+        {
+            get;
+            set;
         }
 
-        public int Port 
-        { 
-            get; 
-            set; 
+        public int Port
+        {
+            get;
+            set;
         }
 
-        public string Protocol 
-        { 
-            get; 
-            set; 
+        public string Protocol
+        {
+            get;
+            set;
         }
 
 
@@ -284,7 +284,7 @@ namespace TeamBuildTray
             soapClient.QueueBuild(request, QueueOptions.None);
         }
 
-        public static List<ProjectInfo> GetProjectList(string protocol, string serverName, int port)
+        public static ReadOnlyCollection<ProjectInfo> GetProjectList(string protocol, string serverName, int port)
         {
             try
             {
@@ -298,24 +298,47 @@ namespace TeamBuildTray
 
                 if (String.Compare(protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    ((BasicHttpBinding) soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
-                    
+                    ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+
                 }
                 else
                 {
                     ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
                 }
 
-                return soapClient.ListProjects();
+                return soapClient.ListProjects().AsReadOnly();
             }
             catch
             {
-                return new List<ProjectInfo>();
+                return new List<ProjectInfo>().AsReadOnly();
             }
         }
 
-      
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-       
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    queryTimer.Dispose();
+                }
+
+                disposed = true;
+            }
+        }
+
+        ~TeamServer()
+        {
+            Dispose(false);
+        }
+
+
     }
 }

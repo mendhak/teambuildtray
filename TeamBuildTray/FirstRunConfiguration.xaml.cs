@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace TeamBuildTray
 {
@@ -66,7 +67,7 @@ namespace TeamBuildTray
                 try
                 {
                     string serverName = TextBoxServerName.Text;
-                    int portNumber = int.Parse(TextBoxPortNumber.Text);
+                    int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
 
                     string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
 
@@ -111,7 +112,7 @@ namespace TeamBuildTray
             if (ValidEntries())
             {
                 string serverName = TextBoxServerName.Text;
-                int portNumber = int.Parse(TextBoxPortNumber.Text);
+                int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
                 string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
 
                 if (!projectListCached)

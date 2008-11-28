@@ -115,7 +115,7 @@ namespace TeamBuildTray.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No definitions found due to incorrect project name or permissions.  Builds, you no haz it.
+        ///   Looks up a localized string similar to No definitions found due to incorrect project name or insufficient permissions..
         /// </summary>
         internal static string NotifierWindow_NoDefinitions {
             get {
