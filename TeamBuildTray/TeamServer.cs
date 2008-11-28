@@ -263,6 +263,17 @@ namespace TeamBuildTray
         public void QueueBuild(string agentUri, string buildUri, string dropLocation)
         {
             BuildServiceSoapClient soapClient = new BuildServiceSoapClient("BuildServiceSoap", GetBuildEndpointAddress());
+
+            if (String.Compare(Protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
+
+            }
+            else
+            {
+                ((BasicHttpBinding)soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            }
+
             BuildRequest request = new BuildRequest
             {
                 BuildAgentUri = agentUri,
@@ -284,6 +295,7 @@ namespace TeamBuildTray
                                                                                                ":" + port +
                                                                                                "/services/v1.0/commonstructureservice.asmx")));
 
+
                 if (String.Compare(protocol, "https", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     ((BasicHttpBinding) soapClient.Endpoint.Binding).Security.Mode = BasicHttpSecurityMode.Transport;
@@ -301,5 +313,9 @@ namespace TeamBuildTray
                 return new List<ProjectInfo>();
             }
         }
+
+      
+
+       
     }
 }
