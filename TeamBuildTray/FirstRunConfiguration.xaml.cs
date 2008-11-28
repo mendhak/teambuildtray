@@ -111,6 +111,7 @@ namespace TeamBuildTray
         {
             if (ValidEntries())
             {
+
                 string serverName = TextBoxServerName.Text;
                 int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
                 string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
@@ -118,7 +119,10 @@ namespace TeamBuildTray
                 if (!projectListCached)
                 {
                     ComboBoxProjects.Items.Clear();
+                    this.Cursor = Cursors.Wait;
                     var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
+                    this.Cursor = Cursors.Arrow;
+
                     foreach (var project in projectList)
                     {
                         ComboBoxProjects.Items.Add(project.Name);
@@ -127,6 +131,9 @@ namespace TeamBuildTray
                 }
             }
         }
+
+
+        
 
         private void ServerValuesChanged(object sender, EventArgs e)
         {
@@ -141,6 +148,11 @@ namespace TeamBuildTray
         private void TextBoxServerName_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBoxServerName.SelectAll();
+        }
+
+        private void FirstRunConfigurationWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
