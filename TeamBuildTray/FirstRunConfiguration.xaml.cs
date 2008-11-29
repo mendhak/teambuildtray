@@ -15,6 +15,17 @@ namespace TeamBuildTray
     public partial class FirstRunConfiguration
     {
         private bool projectListCached;
+        private bool configurationChanged;
+
+
+        /// <summary>
+        /// Specifies whether this is first run configuration or a reconfiguration.
+        /// </summary>
+        public bool ReConfigure
+        {
+            get;
+            set;
+        }
 
         public FirstRunConfiguration()
         {
@@ -30,6 +41,13 @@ namespace TeamBuildTray
 
         private bool ValidEntries()
         {
+
+            if (configurationChanged)
+            {
+                MessageBox.Show("Please select a project name.");
+                return false;
+            }
+
             int portNumber;
             if (int.TryParse(TextBoxPortNumber.Text, out portNumber))
             {
@@ -62,7 +80,10 @@ namespace TeamBuildTray
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            if ((ValidEntries()) && (ComboBoxProjects.SelectedValue != null))
+
+            bool validated = ValidEntries();
+
+            if (validated && (ComboBoxProjects.SelectedValue != null))
             {
                 try
                 {
@@ -96,6 +117,14 @@ namespace TeamBuildTray
                     Close();
                 }
             }
+            else
+            {
+                //Combobox validation needs to occur in the save event, not in validate. Here it is:
+                if (validated && ComboBoxProjects.SelectedValue == null)
+                {
+                    MessageBox.Show("Please select a project name");
+                }
+            }
 
         }
 
@@ -109,6 +138,10 @@ namespace TeamBuildTray
 
         private void ComboBoxProjects_DropDownOpened(object sender, EventArgs e)
         {
+            //Reset  configurationChanged = false;
+            configurationChanged = false;
+            ComboBoxProjects.Items.Clear();
+
             if (ValidEntries())
             {
 
@@ -152,7 +185,58 @@ namespace TeamBuildTray
 
         private void FirstRunConfigurationWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
+
+            if (ReConfigure)
+            {
+                List<TeamServer> teamServers = TeamServer.GetTeamServerList();
+                PopulateFields(teamServers);
+            }
+
+            //Also, reset configurationChanged to false.
+            configurationChanged = false;
         }
+
+
+        private void PopulateFields(List<TeamServer> teamServers)
+        {
+            //Currently, we only deal with the first server.  To deal with multiple, the form layout will need to change.
+            if (teamServers.Count >= 1)
+            {
+                TeamServer currentTeamServer = teamServers[0];
+                TextBoxPortNumber.Text = currentTeamServer.Port.ToString();
+                TextBoxServerName.Text = currentTeamServer.ServerName;
+                
+                if (currentTeamServer.Protocol == "http")
+                {
+                    RadioButtonHttp.IsChecked = true;
+                    RadioButtonHttps.IsChecked = false;
+                }
+                else
+                {
+                    RadioButtonHttps.IsChecked = true;
+                    RadioButtonHttp.IsChecked = false;
+                }
+
+                //Manually add the project name to the combobox.
+                ComboBoxProjects.Items.Add(currentTeamServer.Projects[0].ProjectName);
+                ComboBoxProjects.Text = currentTeamServer.Projects[0].ProjectName;
+
+                LabelWindowTitle.Content = "Change Team Build Server";
+            }
+        }
+
+        
+        private void ServerValuesChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            configurationChanged = true;
+        }
+
+        private void CheckboxServerValuesChanged(object sender, RoutedEventArgs e)
+        {
+            configurationChanged = true;
+        }
+
+       
     }
 }

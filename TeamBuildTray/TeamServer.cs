@@ -8,6 +8,7 @@ using System.Threading;
 using System.Reflection;
 using System.IO;
 using TeamBuildTray.CommonStructureService;
+using System.Xml.Serialization;
 
 namespace TeamBuildTray
 {
@@ -350,5 +351,33 @@ namespace TeamBuildTray
             return basicBinding;
         }
 
+
+        /// <summary>
+        /// Gets a list of configured team servers from the servers XML file.
+        /// </summary>
+        /// <returns></returns>
+        public static List<TeamServer> GetTeamServerList()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<TeamServer>));
+            FileStream fs = File.OpenRead(ServerConfigurationPath);
+            List<TeamServer> teamServers = serializer.Deserialize(fs) as List<TeamServer>;
+            fs.Close();
+            return teamServers;
+        }
+
+
+        /// <summary>
+        /// Gets a list of the hidden builds from the hidden builds XML file.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetHiddenBuilds()
+        {
+            List<string> hiddenFields = new List<string>();
+            XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
+            FileStream fs = File.OpenRead(BuildListConfigurationPath);
+            hiddenFields = serializer.Deserialize(fs) as List<string>;
+            fs.Close();
+            return hiddenFields;
+        }
     }
 }

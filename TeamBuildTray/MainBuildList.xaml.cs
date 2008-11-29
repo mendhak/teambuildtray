@@ -110,10 +110,17 @@ namespace TeamBuildTray
                 servers = GetServersFromConfigurationFile();
             }
 
+
+
             //Add version as menu item
             MenuItem versionMenuItem = new MenuItem {Header = "Version : " + Assembly.GetExecutingAssembly().GetName().Version};
             NotifyIconMainIcon.ContextMenu.Items.Insert(0, versionMenuItem);
             NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
+
+            //Add Reconfigure option into menu
+            MenuItem reconfigureMenuItem = new MenuItem() { Header = "Change Servers" };
+            reconfigureMenuItem.Click += new RoutedEventHandler(reconfigureMenuItem_Click);
+            NotifyIconMainIcon.ContextMenu.Items.Insert(2, reconfigureMenuItem);
 
             //Attach to server events
             foreach (TeamServer server in servers)
@@ -125,6 +132,14 @@ namespace TeamBuildTray
             LoadHiddenBuilds();
 
             InitializeServers();
+        }
+
+        void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            FirstRunConfiguration firstRun = new FirstRunConfiguration() { ReConfigure = true };
+            firstRun.ShowDialog();
+            //Not worried about return value since this is a reconfiguration rather than first run configuration
+
         }
 
         /// <summary>
@@ -149,11 +164,9 @@ namespace TeamBuildTray
         /// <returns></returns>
         private static List<TeamServer> GetServersFromConfigurationFile()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<TeamServer>));
-            FileStream fs = File.OpenRead(TeamServer.ServerConfigurationPath);
-            List<TeamServer> teamServers = serializer.Deserialize(fs) as List<TeamServer>;
-            fs.Close();
-            return teamServers;
+            
+            return TeamServer.GetTeamServerList();
+            
         }
 
 
@@ -164,10 +177,8 @@ namespace TeamBuildTray
             {
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
-                    FileStream fs = File.OpenRead(TeamServer.BuildListConfigurationPath);
-                    hiddenFields = serializer.Deserialize(fs) as List<string>;
-                    fs.Close();
+                    hiddenFields = TeamServer.GetHiddenBuilds();
+
 
                     if (hiddenFields == null)
                     {
