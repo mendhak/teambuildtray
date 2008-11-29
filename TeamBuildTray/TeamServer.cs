@@ -5,7 +5,6 @@ using System.Globalization;
 using System.ServiceModel;
 using TeamBuildTray.TeamBuildService;
 using System.Threading;
-using System.Reflection;
 using System.IO;
 using TeamBuildTray.CommonStructureService;
 using System.Xml.Serialization;
@@ -292,7 +291,7 @@ namespace TeamBuildTray
 
 
                 ClassificationSoapClient soapClient = new ClassificationSoapClient(GetBinding(protocol, "ClassificationSoap"),
-                                                                                    GetProjectListEndpointAddress(serverName, port.ToString(), protocol));
+                                                                                    GetProjectListEndpointAddress(serverName, port.ToString(CultureInfo.InvariantCulture), protocol));
 
 
                 return soapClient.ListProjects().AsReadOnly();
@@ -372,10 +371,9 @@ namespace TeamBuildTray
         /// <returns></returns>
         public static List<string> GetHiddenBuilds()
         {
-            List<string> hiddenFields = new List<string>();
             XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
             FileStream fs = File.OpenRead(BuildListConfigurationPath);
-            hiddenFields = serializer.Deserialize(fs) as List<string>;
+            List<string> hiddenFields = serializer.Deserialize(fs) as List<string>;
             fs.Close();
             return hiddenFields;
         }

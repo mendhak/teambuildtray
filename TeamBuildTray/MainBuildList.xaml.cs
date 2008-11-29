@@ -118,8 +118,8 @@ namespace TeamBuildTray
             NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
 
             //Add Reconfigure option into menu
-            MenuItem reconfigureMenuItem = new MenuItem() { Header = "Change Servers" };
-            reconfigureMenuItem.Click += new RoutedEventHandler(reconfigureMenuItem_Click);
+            MenuItem reconfigureMenuItem = new MenuItem { Header = "Change Servers" };
+            reconfigureMenuItem.Click += reconfigureMenuItem_Click;
             NotifyIconMainIcon.ContextMenu.Items.Insert(2, reconfigureMenuItem);
 
             //Attach to server events
@@ -136,7 +136,7 @@ namespace TeamBuildTray
 
         void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FirstRunConfiguration firstRun = new FirstRunConfiguration() { ReConfigure = true };
+            FirstRunConfiguration firstRun = new FirstRunConfiguration { Reconfigure = true };
             firstRun.ShowDialog();
             //Not worried about return value since this is a reconfiguration rather than first run configuration
 

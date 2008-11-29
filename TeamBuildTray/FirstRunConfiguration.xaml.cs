@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using TeamBuildTray.Resources;
 
 namespace TeamBuildTray
 {
@@ -21,7 +22,7 @@ namespace TeamBuildTray
         /// <summary>
         /// Specifies whether this is first run configuration or a reconfiguration.
         /// </summary>
-        public bool ReConfigure
+        public bool Reconfigure
         {
             get;
             set;
@@ -44,7 +45,7 @@ namespace TeamBuildTray
 
             if (configurationChanged)
             {
-                MessageBox.Show("Please select a project name.");
+                MessageBox.Show("Please select a project name.", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 
@@ -53,25 +54,25 @@ namespace TeamBuildTray
             {
                 if (portNumber <= 0)
                 {
-                    MessageBox.Show("Please enter a valid port number");
+                    MessageBox.Show("Please enter a valid port number", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
             }
             else
             {
-                MessageBox.Show("Please enter a valid port number");
+                MessageBox.Show("Please enter a valid port number", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 
             if (String.IsNullOrEmpty(TextBoxServerName.Text))
             {
-                MessageBox.Show("Please enter a server name");
+                MessageBox.Show("Please enter a server name", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 
             if (RadioButtonHttp.IsChecked.Value == RadioButtonHttps.IsChecked.Value)
             {
-                MessageBox.Show("Please select a protocol");
+                MessageBox.Show("Please select a protocol", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 
@@ -112,7 +113,7 @@ namespace TeamBuildTray
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to write values to the configuration file.  The exception is: " + ex.Message);
+                    MessageBox.Show("Unable to write values to the configuration file.  The exception is: " + ex.Message, ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     DialogResult = false;
                     Close();
                 }
@@ -122,7 +123,7 @@ namespace TeamBuildTray
                 //Combobox validation needs to occur in the save event, not in validate. Here it is:
                 if (validated && ComboBoxProjects.SelectedValue == null)
                 {
-                    MessageBox.Show("Please select a project name");
+                    MessageBox.Show("Please select a project name", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
 
@@ -152,9 +153,9 @@ namespace TeamBuildTray
                 if (!projectListCached)
                 {
                     ComboBoxProjects.Items.Clear();
-                    this.Cursor = Cursors.Wait;
+                    Cursor = Cursors.Wait;
                     var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
-                    this.Cursor = Cursors.Arrow;
+                    Cursor = Cursors.Arrow;
 
                     foreach (var project in projectList)
                     {
@@ -166,7 +167,7 @@ namespace TeamBuildTray
         }
 
 
-        
+
 
         private void ServerValuesChanged(object sender, EventArgs e)
         {
@@ -187,7 +188,7 @@ namespace TeamBuildTray
         {
 
 
-            if (ReConfigure)
+            if (Reconfigure)
             {
                 List<TeamServer> teamServers = TeamServer.GetTeamServerList();
                 PopulateFields(teamServers);
@@ -204,9 +205,9 @@ namespace TeamBuildTray
             if (teamServers.Count >= 1)
             {
                 TeamServer currentTeamServer = teamServers[0];
-                TextBoxPortNumber.Text = currentTeamServer.Port.ToString();
+                TextBoxPortNumber.Text = currentTeamServer.Port.ToString(CultureInfo.CurrentCulture);
                 TextBoxServerName.Text = currentTeamServer.ServerName;
-                
+
                 if (currentTeamServer.Protocol == "http")
                 {
                     RadioButtonHttp.IsChecked = true;
@@ -217,7 +218,7 @@ namespace TeamBuildTray
                     RadioButtonHttps.IsChecked = true;
                     RadioButtonHttp.IsChecked = false;
                 }
-                 
+
                 //Manually add the project name to the combobox.
                 ComboBoxProjects.Items.Add(currentTeamServer.Projects[0].ProjectName);
                 ComboBoxProjects.Text = currentTeamServer.Projects[0].ProjectName;
@@ -226,7 +227,6 @@ namespace TeamBuildTray
             }
         }
 
-        
         private void ServerValuesChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             configurationChanged = true;
@@ -237,6 +237,6 @@ namespace TeamBuildTray
             configurationChanged = true;
         }
 
-       
+
     }
 }
