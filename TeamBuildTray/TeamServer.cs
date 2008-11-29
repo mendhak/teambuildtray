@@ -379,5 +379,6 @@ namespace TeamBuildTray
             fs.Close();
             return hiddenFields;
         }
+
     }
 }

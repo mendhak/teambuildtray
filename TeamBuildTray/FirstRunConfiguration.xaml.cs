@@ -217,7 +217,7 @@ namespace TeamBuildTray
                     RadioButtonHttps.IsChecked = true;
                     RadioButtonHttp.IsChecked = false;
                 }
-
+                 
                 //Manually add the project name to the combobox.
                 ComboBoxProjects.Items.Add(currentTeamServer.Projects[0].ProjectName);
                 ComboBoxProjects.Text = currentTeamServer.Projects[0].ProjectName;

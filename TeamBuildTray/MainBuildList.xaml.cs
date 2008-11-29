@@ -158,6 +158,7 @@ namespace TeamBuildTray
             }   
         }
 
+
         /// <summary>
         /// Opens the servers.xml file and gets the team servers out.
         /// </summary>
