@@ -34,7 +34,7 @@ namespace TeamBuildTray
         private List<TeamServer> servers;
         private static List<string> hiddenFields;
         private bool showConfiguration;
-        
+
         internal static List<string> HiddenBuilds
         {
             get
@@ -61,6 +61,7 @@ namespace TeamBuildTray
             ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
             ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
 
+            //Setup up the notifier window
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
             notifierWindow.Show();
             notifierWindow.Hide();
@@ -68,7 +69,7 @@ namespace TeamBuildTray
             LoadConfiguration();
         }
 
-      
+
 
         /// <summary>
         /// A collection of StatusMessages that the main window can add to.
@@ -113,7 +114,7 @@ namespace TeamBuildTray
 
 
             //Add version as menu item
-            MenuItem versionMenuItem = new MenuItem {Header = "Version : " + Assembly.GetExecutingAssembly().GetName().Version};
+            MenuItem versionMenuItem = new MenuItem { Header = "Version : " + Assembly.GetExecutingAssembly().GetName().Version };
             NotifyIconMainIcon.ContextMenu.Items.Insert(0, versionMenuItem);
             NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
 
@@ -155,7 +156,7 @@ namespace TeamBuildTray
             {
                 Close();
                 Environment.Exit(0);
-            }   
+            }
         }
 
 
@@ -319,86 +320,114 @@ namespace TeamBuildTray
                     string buildName = String.Empty;
                     foreach (TeamServer server in servers)
                     {
-                        buildName = server.GetDefinitionByUri(build.BuildDefinitionUri).GetFriendlyName();
-                        if (!String.IsNullOrEmpty(buildName))
+                        BuildDefinition definition = server.GetDefinitionByUri(build.BuildDefinitionUri);
+                        if (definition != null)
                         {
-                            break;
-                        }
-                    }
-
-                    if ((!buildIdsAlertedInProgress.Contains(build.Id)) && (build.Status == QueueStatus.InProgress))
-                    {
-                        StatusMessage message = new StatusMessage
-                                                    {
-                                                        EventDate = DateTime.Now,
-                                                        BuildStatus = IconColour.Amber,
-                                                        Message = String.Format(CultureInfo.CurrentUICulture, ResourcesMain.NotifierWindow_InProgress, build.RequestedBy, buildName)
-                                                    };
-
-                        notifierWindow.AddContent(message);
-                        mainIconColour = IconColour.Amber;
-                        iconChanged = true;
-                        newMessages = true;
-                        buildIdsAlertedInProgress.Add(build.Id);
-                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title + " - Building";
-
-
-                        UpdateMainWindowItem(build.BuildDefinitionUri, BuildStatus.InProgress, build.RequestedBy);
-                    }
-                    else if ((!buildIdsAlertedQueued.Contains(build.Id)) && (build.Status == QueueStatus.Queued))
-                    {
-                        StatusMessage message = new StatusMessage
-                        {
-                            EventDate = DateTime.Now,
-                            BuildStatus = IconColour.Amber,
-                            Message = String.Format(CultureInfo.CurrentUICulture, ResourcesMain.NotifierWindow_Queued, build.RequestedBy, buildName)
-                        };
-                        notifierWindow.AddContent(message);
-                        newMessages = true;
-                        buildIdsAlertedQueued.Add(build.Id);
-                    }
-                    else if ((!buildIdsAlertedDone.Contains(build.Id)) && (build.Status == QueueStatus.Completed))
-                    {
-                        StatusMessage message = new StatusMessage
-                        {
-                            EventDate = DateTime.Now
-                        };
-
-                        //Get the status from the build log
-                        foreach (BuildDetail item in buildContent)
-                        {
-                            if (item.BuildDefinitionUri == build.BuildDefinitionUri)
+                            buildName = definition.GetFriendlyName();
+                            if (!String.IsNullOrEmpty(buildName))
                             {
-                                message.BuildStatus = item.Status == BuildStatus.Failed ? IconColour.Red : IconColour.Green;
-                                message.Message = item.Status == BuildStatus.Failed ? String.Format(CultureInfo.CurrentUICulture, ResourcesMain.NotifierWindow_FailedBuild, build.RequestedFor, buildName) :
-                                    String.Format(CultureInfo.CurrentUICulture, ResourcesMain.NotifierWindow_BuildPassed, buildName);
-                                message.HyperlinkUri = new Uri(item.LogLocation);
-                                mainIconColour = message.BuildStatus;
-                                iconChanged = true;
                                 break;
                             }
                         }
+                    }
 
-                        NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+                    //Adding builds while the tray is running can cause it to fail, only builds which have atleast 1 successfull build will be displayed.
+                    if (!String.IsNullOrEmpty(buildName))
+                    {
+                        //Check if this is an "In Progress" status and has not been displayed before
+                        if ((!buildIdsAlertedInProgress.Contains(build.Id)) && (build.Status == QueueStatus.InProgress))
+                        {
+                            StatusMessage message = new StatusMessage
+                                                        {
+                                                            EventDate = DateTime.Now,
+                                                            BuildStatus = IconColour.Amber,
+                                                            Message =
+                                                                String.Format(CultureInfo.CurrentUICulture,
+                                                                              ResourcesMain.NotifierWindow_InProgress,
+                                                                              build.RequestedBy, buildName)
+                                                        };
 
-                        notifierWindow.AddContent(message);
-                        newMessages = true;
-                        buildIdsAlertedDone.Add(build.Id);
+                            notifierWindow.AddContent(message);
+                            mainIconColour = IconColour.Amber;
+                            iconChanged = true;
+                            newMessages = true;
+                            buildIdsAlertedInProgress.Add(build.Id);
+                            NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title + " - Building";
 
+
+                            UpdateMainWindowItem(build.BuildDefinitionUri, BuildStatus.InProgress, build.RequestedBy);
+                        } //Check if this is an "Queued" status and has not been displayed before
+                        else if ((!buildIdsAlertedQueued.Contains(build.Id)) && (build.Status == QueueStatus.Queued))
+                        {
+                            StatusMessage message = new StatusMessage
+                                                        {
+                                                            EventDate = DateTime.Now,
+                                                            BuildStatus = IconColour.Amber,
+                                                            Message =
+                                                                String.Format(CultureInfo.CurrentUICulture,
+                                                                              ResourcesMain.NotifierWindow_Queued,
+                                                                              build.RequestedBy, buildName)
+                                                        };
+                            notifierWindow.AddContent(message);
+                            newMessages = true;
+                            buildIdsAlertedQueued.Add(build.Id);
+                        }//Check if this is an "Completed" status and has not been displayed before
+                        else if ((!buildIdsAlertedDone.Contains(build.Id)) && (build.Status == QueueStatus.Completed))
+                        {
+                            StatusMessage message = new StatusMessage
+                                                        {
+                                                            EventDate = DateTime.Now
+                                                        };
+
+                            //Get the status from the build log
+                            foreach (BuildDetail item in buildContent)
+                            {
+                                if (item.BuildDefinitionUri == build.BuildDefinitionUri)
+                                {
+                                    message.BuildStatus = item.Status == BuildStatus.Failed
+                                                              ? IconColour.Red
+                                                              : IconColour.Green;
+                                    message.Message = item.Status == BuildStatus.Failed
+                                                          ? String.Format(CultureInfo.CurrentUICulture,
+                                                                          ResourcesMain.NotifierWindow_FailedBuild,
+                                                                          build.RequestedFor, buildName)
+                                                          :
+                                                              String.Format(CultureInfo.CurrentUICulture,
+                                                                            ResourcesMain.NotifierWindow_BuildPassed,
+                                                                            buildName);
+                                    message.HyperlinkUri = new Uri(item.LogLocation);
+                                    mainIconColour = message.BuildStatus;
+                                    iconChanged = true;
+                                    break;
+                                }
+                            }
+
+                            NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+
+                            notifierWindow.AddContent(message);
+                            newMessages = true;
+                            buildIdsAlertedDone.Add(build.Id);
+
+                        }
                     }
                 }
             }
 
+            //Only pop up if new messages
             if (newMessages)
             {
                 notifierWindow.Notify();
             }
+            //Only update the main icon if its a valid status change
             if (iconChanged)
             {
                 SetIcon(mainIconColour);
             }
         }
 
+        /// <summary>
+        /// Cleans up the already done queues to save memory
+        /// </summary>
         private void CleanupIds()
         {
             lock (buildIdsAlertedDone)
