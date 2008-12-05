@@ -15,11 +15,28 @@ using TeamBuildTray.TeamBuildService;
 using System.Globalization;
 using TeamBuildTray.Resources;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace TeamBuildTray
 {
     public partial class MainBuildList
     {
+
+        //We need these Win32 DLLs to be able to spawn and show a window in WPF without letting it steal focus.
+        [DllImport("user32.dll")]
+        static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SetWindowsHookEx(int code, HookProc func, IntPtr hInstance, int threadID);
+
+        [DllImport("user32.dll")]
+        static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+        delegate int HookProc(int code, IntPtr wParam, IntPtr lParam);
+        private HookProc unhookDelegate;
+        IntPtr hook;
+
+       
         private readonly NotifierWindow notifierWindow;
 
         private readonly Dictionary<string, DateTime> buildUpdates = new Dictionary<string, DateTime>();
@@ -63,6 +80,13 @@ namespace TeamBuildTray
 
             //Setup up the notifier window
             notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
+
+
+            //Set up delegate that will prevent the notifier from stealing focus
+            this.unhookDelegate = new HookProc(this.Unhooker);
+
+            //Set up a hook to prevent activation and to prevent this window from stealing focus.
+            hook = SetWindowsHookEx(5 /* wh_cbt */, this.unhookDelegate, IntPtr.Zero, AppDomain.GetCurrentThreadId());
             notifierWindow.Show();
             notifierWindow.Hide();
 
@@ -667,6 +691,20 @@ namespace TeamBuildTray
                     }
                 }
             }
+        }
+
+
+
+        private int Unhooker(int code, IntPtr wParam, IntPtr lParam)
+        {
+            switch (code)
+            {
+                case 5: /* HCBT_ACTVIATE */
+                    UnhookWindowsHookEx(hook);
+                    return 1; /* prevent Windows from handling activate */
+            }
+            //return the value returned by CallNextHookEx
+            return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
         }
     }
 }
