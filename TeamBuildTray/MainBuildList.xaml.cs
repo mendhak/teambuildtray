@@ -440,7 +440,11 @@ namespace TeamBuildTray
             //Only pop up if new messages
             if (newMessages)
             {
-                notifierWindow.Notify();
+                foreach (StatusMessage sm in notifierWindow.NotifyContent)
+                {
+                    MessageWindow.Show(sm.Message,3000);
+                }
+                //notifierWindow.Notify();
             }
             //Only update the main icon if its a valid status change
             if (iconChanged)
@@ -507,7 +511,8 @@ namespace TeamBuildTray
             {
                 case IconColour.Grey:
                     notifierWindow.AddContent(new StatusMessage { BuildStatus = IconColour.Grey, EventDate = DateTime.Now, Message = ResourcesMain.NotifierWindow_NoDefinitions });
-                    notifierWindow.Notify();
+                    MessageWindow.Show(ResourcesMain.NotifierWindow_NoDefinitions,3000);
+                    //notifierWindow.Notify();
                     break;
             }
         }
@@ -576,7 +581,11 @@ namespace TeamBuildTray
 
         private void NotifyIconOpenNotifications_Click(object sender, RoutedEventArgs e)
         {
-            notifierWindow.Notify();
+            //notifierWindow.Notify();
+            foreach (StatusMessage sm in notifierWindow.NotifyContent)
+            {
+                MessageWindow.Show(sm.Message, 3000);
+            }
         }
 
         private void NotifyIconExit_Click(object sender, RoutedEventArgs e)
