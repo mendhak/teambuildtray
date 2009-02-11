@@ -15,30 +15,11 @@ using TeamBuildTray.TeamBuildService;
 using System.Globalization;
 using TeamBuildTray.Resources;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace TeamBuildTray
 {
     public partial class MainBuildList
     {
-
-        //We need these Win32 DLLs to be able to spawn and show a window in WPF without letting it steal focus.
-        [DllImport("user32.dll")]
-        static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-        [DllImport("user32.dll")]
-        static extern IntPtr SetWindowsHookEx(int code, HookProc func, IntPtr hInstance, int threadID);
-
-        [DllImport("user32.dll")]
-        static extern int CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-        delegate int HookProc(int code, IntPtr wParam, IntPtr lParam);
-        private HookProc unhookDelegate;
-        IntPtr hook;
-
-       
-        private readonly NotifierWindow notifierWindow;
-
         private readonly Dictionary<string, DateTime> buildUpdates = new Dictionary<string, DateTime>();
         private ObservableCollection<BuildDetail> buildContentView;
         private readonly List<BuildDetail> buildContent = new List<BuildDetail>();
@@ -51,6 +32,7 @@ namespace TeamBuildTray
         private List<TeamServer> servers;
         private static List<string> hiddenFields;
         private bool showConfiguration;
+        private readonly Queue<StatusMessage> statusMessages = new Queue<StatusMessage>(20);
 
         internal static List<string> HiddenBuilds
         {
@@ -78,17 +60,11 @@ namespace TeamBuildTray
             ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
             ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
 
-            //Setup up the notifier window
-            notifierWindow = new NotifierWindow { StayOpenMilliseconds = 3000, HidingMilliseconds = 0 };
-
-
             //Set up delegate that will prevent the notifier from stealing focus
-            this.unhookDelegate = new HookProc(this.Unhooker);
+            //unhookDelegate = Unhooker;
 
             //Set up a hook to prevent activation and to prevent this window from stealing focus.
-            hook = SetWindowsHookEx(5 /* wh_cbt */, this.unhookDelegate, IntPtr.Zero, AppDomain.GetCurrentThreadId());
-            notifierWindow.Show();
-            notifierWindow.Hide();
+            //hook = SetWindowsHookEx(5 /* wh_cbt */, this.unhookDelegate, IntPtr.Zero, AppDomain.GetCurrentThreadId());
 
             LoadConfiguration();
         }
@@ -159,7 +135,7 @@ namespace TeamBuildTray
             InitializeServers();
         }
 
-        void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
+        private static void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
         {
             FirstRunConfiguration firstRun = new FirstRunConfiguration { Reconfigure = true };
             firstRun.ShowDialog();
@@ -190,9 +166,9 @@ namespace TeamBuildTray
         /// <returns></returns>
         private static List<TeamServer> GetServersFromConfigurationFile()
         {
-            
+
             return TeamServer.GetTeamServerList();
-            
+
         }
 
 
@@ -203,13 +179,7 @@ namespace TeamBuildTray
             {
                 try
                 {
-                    hiddenFields = TeamServer.GetHiddenBuilds();
-
-
-                    if (hiddenFields == null)
-                    {
-                        hiddenFields = new List<string>();
-                    }
+                    hiddenFields = TeamServer.GetHiddenBuilds() ?? new List<string>();
                 }
                 catch (Exception)
                 {
@@ -322,7 +292,6 @@ namespace TeamBuildTray
 
         private void AlertChanges(BuildQueryEventArgs buildQueryEventArgs)
         {
-            bool newMessages = false;
             bool iconChanged = false;
             IconColour mainIconColour = IconColour.Green;
 
@@ -371,10 +340,9 @@ namespace TeamBuildTray
                                                                               build.RequestedBy, buildName)
                                                         };
 
-                            notifierWindow.AddContent(message);
+                            statusMessages.Enqueue(message);
                             mainIconColour = IconColour.Amber;
                             iconChanged = true;
-                            newMessages = true;
                             buildIdsAlertedInProgress.Add(build.Id);
                             NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title + " - Building";
 
@@ -392,8 +360,7 @@ namespace TeamBuildTray
                                                                               ResourcesMain.NotifierWindow_Queued,
                                                                               build.RequestedBy, buildName)
                                                         };
-                            notifierWindow.AddContent(message);
-                            newMessages = true;
+                            statusMessages.Enqueue(message);
                             buildIdsAlertedQueued.Add(build.Id);
                         }//Check if this is an "Completed" status and has not been displayed before
                         else if ((!buildIdsAlertedDone.Contains(build.Id)) && (build.Status == QueueStatus.Completed))
@@ -428,8 +395,7 @@ namespace TeamBuildTray
 
                             NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
 
-                            notifierWindow.AddContent(message);
-                            newMessages = true;
+                            statusMessages.Enqueue(message);
                             buildIdsAlertedDone.Add(build.Id);
 
                         }
@@ -438,13 +404,9 @@ namespace TeamBuildTray
             }
 
             //Only pop up if new messages
-            if (newMessages)
+            if (statusMessages.Count > 0)
             {
-                foreach (StatusMessage sm in notifierWindow.NotifyContent)
-                {
-                    MessageWindow.Show(sm.Message,3000);
-                }
-                //notifierWindow.Notify();
+                MessageWindow.Show(statusMessages.Peek(), 3000);
             }
             //Only update the main icon if its a valid status change
             if (iconChanged)
@@ -510,8 +472,7 @@ namespace TeamBuildTray
             switch (iconColour)
             {
                 case IconColour.Grey:
-                    notifierWindow.AddContent(new StatusMessage { BuildStatus = IconColour.Grey, EventDate = DateTime.Now, Message = ResourcesMain.NotifierWindow_NoDefinitions });
-                    MessageWindow.Show(ResourcesMain.NotifierWindow_NoDefinitions,3000);
+                    MessageWindow.Show(new StatusMessage { BuildStatus = IconColour.Grey, Message = ResourcesMain.NotifierWindow_NoDefinitions }, 3000);
                     //notifierWindow.Notify();
                     break;
             }
@@ -551,11 +512,6 @@ namespace TeamBuildTray
             // Actually closing window.
             NotifyIconMainIcon.Visibility = Visibility.Collapsed;
 
-            // Close the taskbar notifier too.
-            if (notifierWindow != null)
-                notifierWindow.Close();
-
-
             //Save the hidden builds list
             XmlSerializer serializer = new XmlSerializer(typeof(List<string>));
             FileStream fs = File.Open(TeamServer.BuildListConfigurationPath, FileMode.Create, FileAccess.Write,
@@ -581,10 +537,9 @@ namespace TeamBuildTray
 
         private void NotifyIconOpenNotifications_Click(object sender, RoutedEventArgs e)
         {
-            //notifierWindow.Notify();
-            foreach (StatusMessage sm in notifierWindow.NotifyContent)
+            if (statusMessages.Count > 0)
             {
-                MessageWindow.Show(sm.Message, 3000);
+                MessageWindow.Show(statusMessages.Peek(), 3000);
             }
         }
 
@@ -613,10 +568,6 @@ namespace TeamBuildTray
             Border border = sender as Border;
 
             if (border != null) border.Background = null;
-        }
-
-        private void NotifyIconMainIcon_MouseMove(object sender, MouseEventArgs e)
-        {
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -700,20 +651,6 @@ namespace TeamBuildTray
                     }
                 }
             }
-        }
-
-
-
-        private int Unhooker(int code, IntPtr wParam, IntPtr lParam)
-        {
-            switch (code)
-            {
-                case 5: /* HCBT_ACTVIATE */
-                    UnhookWindowsHookEx(hook);
-                    return 1; /* prevent Windows from handling activate */
-            }
-            //return the value returned by CallNextHookEx
-            return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
         }
     }
 }

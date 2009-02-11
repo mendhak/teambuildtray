@@ -119,13 +119,6 @@
     <None Include="Service References\TeamBuildService\configuration.svcinfo" />
     <None Include="Service References\TeamBuildService\configuration91.svcinfo" />
     <None Include="Service References\TeamBuildService\buildservice.disco" />
-    <Page Include="NotifierWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="NotifierWindow.xaml.cs">
-      <DependentUpon>NotifierWindow.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -140,12 +133,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MessageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="App.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalloonTipIcon.cs" />
     <Compile Include="BuildDefinitionExtension.cs" />
     <Compile Include="BuildQueryEventArgs.cs" />
     <Compile Include="BuildStatusConverter.cs" />
@@ -158,6 +156,10 @@
     <Compile Include="MainBuildList.xaml.cs">
       <DependentUpon>MainBuildList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MessageWindow.xaml.cs">
+      <DependentUpon>MessageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyIcon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -258,12 +260,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WPFTaskbarNotifier\WPFTaskbarNotifier.csproj">
-      <Project>{C807F74B-9C21-4A9F-8A60-C7D7AF7BCBBA}</Project>
-      <Name>WPFTaskbarNotifier</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
