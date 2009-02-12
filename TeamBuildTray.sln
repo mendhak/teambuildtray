@@ -3,15 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBuildTray", "TeamBuildTray\TeamBuildTray.csproj", "{FF7493B5-DBF7-47C3-91A3-EE1B2DAAAC45}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupProject", "SetupProject\SetupProject.vdproj", "{DE9FD6BB-6F52-4ADB-B1B9-EFF5470D9C4A}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = TeamBuildTray\\TeamBuildTray.csproj
 		SccProjectName1 = TeamBuildTray
 		SccLocalPath1 = TeamBuildTray
+		SccProjectUniqueName2 = SetupProject\\SetupProject.vdproj
+		SccProjectName2 = SetupProject
+		SccLocalPath2 = SetupProject
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +27,10 @@ Global
 		{FF7493B5-DBF7-47C3-91A3-EE1B2DAAAC45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF7493B5-DBF7-47C3-91A3-EE1B2DAAAC45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF7493B5-DBF7-47C3-91A3-EE1B2DAAAC45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE9FD6BB-6F52-4ADB-B1B9-EFF5470D9C4A}.Debug|Any CPU.ActiveCfg = Debug
+		{DE9FD6BB-6F52-4ADB-B1B9-EFF5470D9C4A}.Debug|Any CPU.Build.0 = Debug
+		{DE9FD6BB-6F52-4ADB-B1B9-EFF5470D9C4A}.Release|Any CPU.ActiveCfg = Release
+		{DE9FD6BB-6F52-4ADB-B1B9-EFF5470D9C4A}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,7 +23,7 @@ namespace TeamBuildTray
         private readonly Dictionary<string, DateTime> buildUpdates = new Dictionary<string, DateTime>();
         private ObservableCollection<BuildDetail> buildContentView;
         private readonly List<BuildDetail> buildContent = new List<BuildDetail>();
-
+        StatusMessage lastStatusMessage = new StatusMessage() { Message = "" };
         private bool exitButtonClicked;
         private readonly List<int> buildIdsAlertedInProgress = new List<int>();
         private readonly List<int> buildIdsAlertedQueued = new List<int>();
@@ -49,6 +49,7 @@ namespace TeamBuildTray
 
         public MainBuildList()
         {
+
             InitializeComponent();
             SetIcon(IconColour.Grey);
 
@@ -88,6 +89,11 @@ namespace TeamBuildTray
 
         private void LoadConfiguration()
         {
+
+            StatusMessage initializing = new StatusMessage() { Message = "Initializing..." };
+            MessageWindow.Show(initializing, 3000);
+
+
             if (File.Exists(TeamServer.ServerConfigurationPath))
             {
                 try
@@ -406,7 +412,8 @@ namespace TeamBuildTray
             //Only pop up if new messages
             if (statusMessages.Count > 0)
             {
-                MessageWindow.Show(statusMessages.Peek(), 3000);
+                lastStatusMessage = statusMessages.Dequeue();
+                MessageWindow.Show(lastStatusMessage, 3000);
             }
             //Only update the main icon if its a valid status change
             if (iconChanged)
@@ -537,10 +544,11 @@ namespace TeamBuildTray
 
         private void NotifyIconOpenNotifications_Click(object sender, RoutedEventArgs e)
         {
-            if (statusMessages.Count > 0)
+            if (!String.IsNullOrEmpty(lastStatusMessage.Message))
             {
-                MessageWindow.Show(statusMessages.Peek(), 3000);
+                MessageWindow.Show(lastStatusMessage, 3000);
             }
+
         }
 
         private void NotifyIconExit_Click(object sender, RoutedEventArgs e)
