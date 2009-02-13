@@ -200,71 +200,106 @@ namespace TeamBuildTray
             return new EndpointAddress(new Uri(Protocol + "://" + ServerName + ":" + Port + "/build/v2.0/buildservice.asmx"));
         }
 
+        public QueuedBuild GetBuildStatus(int id)
+        {
+            using (BuildServiceSoapClient soapClient = new BuildServiceSoapClient(GetBinding(Protocol, "BuildServiceSoap"), GetBuildEndpointAddress()))
+            {
+                var buildResut = soapClient.QueryBuildQueueById(new[] {id}, QueryOptions.All).Builds[0];
+
+                try
+                {
+                    soapClient.Close();
+                }
+                catch (Exception)
+                {
+                    soapClient.Abort();
+                }
+
+                return buildResut;
+            }
+        }
+
         private BuildQueryEventArgs QueryBuilds(IEnumerable<BuildDefinition> buildDefinitions)
         {
-            BuildServiceSoapClient soapClient = new BuildServiceSoapClient(GetBinding(Protocol, "BuildServiceSoap"), GetBuildEndpointAddress());
-
-
-            List<BuildDetailSpec> buildDetailSpecs = new List<BuildDetailSpec>();
-            List<BuildQueueSpec> buildQueueSpecs = new List<BuildQueueSpec>();
-
-            //Do queries
-            foreach (BuildDefinition definition in buildDefinitions)
+            using (BuildServiceSoapClient soapClient = new BuildServiceSoapClient(GetBinding(Protocol, "BuildServiceSoap"), GetBuildEndpointAddress()))
             {
-                BuildDetailSpec buildDetailSpec = new BuildDetailSpec
-                {
-                    BuildNumber = "*",
-                    DefinitionPath = definition.FullPath,
-                    DefinitionSpec = new BuildDefinitionSpec { FullPath = definition.FullPath },
-                    MaxBuildsPerDefinition = 1,
-                    MinChangedTime = DateTime.MinValue,
-                    MinFinishTime = DateTime.MinValue,
-                    QueryOrder = BuildQueryOrder.FinishTimeDescending
-                };
+                List<BuildDetailSpec> buildDetailSpecs = new List<BuildDetailSpec>();
+                List<BuildQueueSpec> buildQueueSpecs = new List<BuildQueueSpec>();
 
-                buildDetailSpecs.Add(buildDetailSpec);
-            }
-
-            //Generate agent specs
-            foreach (TeamProject project in Projects)
-            {
-                foreach (BuildAgent agent in project.BuildAgents)
+                //Do queries
+                foreach (BuildDefinition definition in buildDefinitions)
                 {
-                    buildQueueSpecs.Add(new BuildQueueSpec
-                    {
-                        AgentSpec = new BuildAgentSpec
-                        {
-                            FullPath = agent.FullPath,
-                            MachineName = agent.MachineName,
-                            Port = agent.Port
-                        },
-                        CompletedAge = 300,
-                        DefinitionSpec = new BuildDefinitionSpec
-                        {
-                            FullPath = "\\" + project.ProjectName + "\\*"
-                        },
-                        Options = QueryOptions.All,
-                        StatusFlags = QueueStatus.Completed | QueueStatus.InProgress | QueueStatus.Queued
-                    });
+                    BuildDetailSpec buildDetailSpec = new BuildDetailSpec
+                                                          {
+                                                              BuildNumber = "*",
+                                                              DefinitionPath = definition.FullPath,
+                                                              DefinitionSpec =
+                                                                  new BuildDefinitionSpec { FullPath = definition.FullPath },
+                                                              MaxBuildsPerDefinition = 1,
+                                                              MinChangedTime = DateTime.MinValue,
+                                                              MinFinishTime = DateTime.MinValue,
+                                                              QueryOrder = BuildQueryOrder.FinishTimeDescending
+                                                          };
+
+                    buildDetailSpecs.Add(buildDetailSpec);
                 }
-            }
 
-            try
-            {
-                ReadOnlyCollection<BuildQueueQueryResult> queueResults =
-                    new List<BuildQueueQueryResult>(soapClient.QueryBuildQueue(buildQueueSpecs.ToArray())).AsReadOnly();
-                ReadOnlyCollection<BuildQueryResult> buildResults =
-                    new List<BuildQueryResult>(soapClient.QueryBuilds(buildDetailSpecs.ToArray())).AsReadOnly();
-
-                return new BuildQueryEventArgs
+                //Generate agent specs
+                foreach (TeamProject project in Projects)
                 {
-                    BuildQueryResults = buildResults,
-                    BuildQueueQueryResults = queueResults
-                };
-            }
-            catch
-            {
-                return null;
+                    foreach (BuildAgent agent in project.BuildAgents)
+                    {
+                        buildQueueSpecs.Add(new BuildQueueSpec
+                                                {
+                                                    AgentSpec = new BuildAgentSpec
+                                                                    {
+                                                                        FullPath = agent.FullPath,
+                                                                        MachineName = agent.MachineName,
+                                                                        Port = agent.Port
+                                                                    },
+                                                    CompletedAge = 300,
+                                                    DefinitionSpec = new BuildDefinitionSpec
+                                                                         {
+                                                                             FullPath =
+                                                                                 "\\" + project.ProjectName + "\\*"
+                                                                         },
+                                                    Options = QueryOptions.All,
+                                                    StatusFlags =
+                                                        QueueStatus.Completed | QueueStatus.InProgress |
+                                                        QueueStatus.Queued
+                                                });
+                    }
+                }
+
+                try
+                {
+                    ReadOnlyCollection<BuildQueueQueryResult> queueResults =
+                        new List<BuildQueueQueryResult>(soapClient.QueryBuildQueue(buildQueueSpecs.ToArray())).
+                            AsReadOnly();
+                    ReadOnlyCollection<BuildQueryResult> buildResults =
+                        new List<BuildQueryResult>(soapClient.QueryBuilds(buildDetailSpecs.ToArray())).AsReadOnly();
+
+                    try
+                    {
+                        soapClient.Close();
+                    }
+                    catch (Exception)
+                    {
+                        soapClient.Abort();
+                    }
+
+                    return new BuildQueryEventArgs
+                               {
+                                   BuildQueryResults = buildResults,
+                                   BuildQueueQueryResults = queueResults
+                               };
+
+                }
+                catch
+                {
+                    return null;
+                }
+
             }
 
         }

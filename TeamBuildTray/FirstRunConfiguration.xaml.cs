@@ -199,7 +199,7 @@ namespace TeamBuildTray
         }
 
 
-        private void PopulateFields(List<TeamServer> teamServers)
+        private void PopulateFields(IList<TeamServer> teamServers)
         {
             //Currently, we only deal with the first server.  To deal with multiple, the form layout will need to change.
             if (teamServers.Count >= 1)
@@ -225,11 +225,6 @@ namespace TeamBuildTray
 
                 LabelWindowTitle.Content = "Change Team Build Server";
             }
-        }
-
-        private void ServerValuesChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            configurationChanged = true;
         }
 
         private void CheckboxServerValuesChanged(object sender, RoutedEventArgs e)

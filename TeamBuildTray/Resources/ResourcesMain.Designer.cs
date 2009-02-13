@@ -133,6 +133,15 @@ namespace TeamBuildTray.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} cancelled.
+        /// </summary>
+        internal static string NotifierWindow_Stopped {
+            get {
+                return ResourceManager.GetString("NotifierWindow_Stopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notifications.
         /// </summary>
         internal static string NotifierWindow_Title {

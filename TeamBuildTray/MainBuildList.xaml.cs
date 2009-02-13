@@ -23,9 +23,10 @@ namespace TeamBuildTray
         private readonly Dictionary<string, DateTime> buildUpdates = new Dictionary<string, DateTime>();
         private ObservableCollection<BuildDetail> buildContentView;
         private readonly List<BuildDetail> buildContent = new List<BuildDetail>();
-        StatusMessage lastStatusMessage = new StatusMessage() { Message = "" };
+        StatusMessage lastStatusMessage = new StatusMessage { Message = "" };
         private bool exitButtonClicked;
         private readonly List<int> buildIdsAlertedInProgress = new List<int>();
+        private readonly Dictionary<int, string> buildIdUris = new Dictionary<int, string>();
         private readonly List<int> buildIdsAlertedQueued = new List<int>();
         private readonly List<int> buildIdsAlertedDone = new List<int>();
         private IconColour currentIconColour = IconColour.Grey;
@@ -61,12 +62,6 @@ namespace TeamBuildTray
             ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
             ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
 
-            //Set up delegate that will prevent the notifier from stealing focus
-            //unhookDelegate = Unhooker;
-
-            //Set up a hook to prevent activation and to prevent this window from stealing focus.
-            //hook = SetWindowsHookEx(5 /* wh_cbt */, this.unhookDelegate, IntPtr.Zero, AppDomain.GetCurrentThreadId());
-
             LoadConfiguration();
         }
 
@@ -90,7 +85,7 @@ namespace TeamBuildTray
         private void LoadConfiguration()
         {
 
-            StatusMessage initializing = new StatusMessage() { Message = "Initializing..." };
+            StatusMessage initializing = new StatusMessage { Message = "Initializing..." };
             MessageWindow.Show(initializing, 3000);
 
 
@@ -307,6 +302,15 @@ namespace TeamBuildTray
             //Find in progress builds
             foreach (BuildQueueQueryResult queueResult in buildQueryEventArgs.BuildQueueQueryResults)
             {
+                //Check for cancelled builds
+                IconColour? iconColour = CheckCancelledBuilds(queueResult);
+                if (iconColour.HasValue)
+                {
+                    mainIconColour = iconColour.Value;
+                    iconChanged = true;
+                }
+
+                //Loop through builds with active histories
                 foreach (QueuedBuild build in queueResult.Builds.OrderBy(item => item.Id))
                 {
                     //Check if build is hidden
@@ -316,19 +320,8 @@ namespace TeamBuildTray
                     }
 
                     //Get the friendly names
-                    string buildName = String.Empty;
-                    foreach (TeamServer server in servers)
-                    {
-                        BuildDefinition definition = server.GetDefinitionByUri(build.BuildDefinitionUri);
-                        if (definition != null)
-                        {
-                            buildName = definition.GetFriendlyName();
-                            if (!String.IsNullOrEmpty(buildName))
-                            {
-                                break;
-                            }
-                        }
-                    }
+                    string buildName = GetFriendlyName(build.BuildDefinitionUri);
+
 
                     //Adding builds while the tray is running can cause it to fail, only builds which have atleast 1 successfull build will be displayed.
                     if (!String.IsNullOrEmpty(buildName))
@@ -350,6 +343,7 @@ namespace TeamBuildTray
                             mainIconColour = IconColour.Amber;
                             iconChanged = true;
                             buildIdsAlertedInProgress.Add(build.Id);
+                            buildIdUris.Add(build.Id, build.BuildDefinitionUri);
                             NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title + " - Building";
 
 
@@ -375,6 +369,9 @@ namespace TeamBuildTray
                                                         {
                                                             EventDate = DateTime.Now
                                                         };
+
+                            buildIdsAlertedInProgress.Remove(build.Id);
+                            buildIdUris.Remove(build.Id);
 
                             //Get the status from the build log
                             foreach (BuildDetail item in buildContent)
@@ -422,6 +419,63 @@ namespace TeamBuildTray
             }
         }
 
+        private string GetFriendlyName(string buildDefinitionUri)
+        {
+            string buildName = String.Empty;
+            foreach (TeamServer server in servers)
+            {
+                BuildDefinition definition = server.GetDefinitionByUri(buildDefinitionUri);
+                if (definition != null)
+                {
+                    buildName = definition.GetFriendlyName();
+                    if (!String.IsNullOrEmpty(buildName))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return buildName;
+        }
+
+        private IconColour? CheckCancelledBuilds(BuildQueueQueryResult result)
+        {
+            IconColour? returnColour = null;
+
+            var buildIdHistories = from build in result.Builds select build.Id;
+            List<int> cancelledBuilds = new List<int>();
+            foreach (int buildId in buildIdsAlertedInProgress)
+            {
+                if (!buildIdHistories.Contains(buildId))
+                {
+                    //Build was cancelled
+                    cancelledBuilds.Add(buildId);
+                }
+            }
+
+            foreach (int buildId in cancelledBuilds)
+            {
+                buildIdsAlertedInProgress.Remove(buildId);
+                string uri = buildIdUris[buildId];
+                buildIdUris.Remove(buildId);
+
+                StatusMessage message = new StatusMessage
+                {
+                    EventDate = DateTime.Now,
+                    BuildStatus = IconColour.Green,
+                    Message = String.Format(CultureInfo.CurrentUICulture, ResourcesMain.NotifierWindow_Stopped, GetFriendlyName(uri))
+                };
+
+                statusMessages.Enqueue(message);
+                returnColour = IconColour.Red;
+                NotifyIconMainIcon.Text = ResourcesMain.MainWindow_Title;
+
+                UpdateMainWindowItem(uri, BuildStatus.Failed, String.Empty);
+            }
+
+            return returnColour;
+        }
+
         /// <summary>
         /// Cleans up the already done queues to save memory
         /// </summary>
@@ -457,7 +511,10 @@ namespace TeamBuildTray
                 if (build.BuildDefinitionUri == buildDefinitionUri)
                 {
                     build.Status = status;
-                    build.RequestedFor = requestedBy;
+                    if (!String.IsNullOrEmpty(requestedBy))
+                    {
+                        build.RequestedFor = requestedBy;
+                    }
                     break;
                 }
             }

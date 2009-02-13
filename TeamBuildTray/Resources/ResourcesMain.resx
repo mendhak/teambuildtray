@@ -141,6 +141,9 @@
   <data name="NotifierWindow_Queued" xml:space="preserve">
     <value>{0} queued {1}</value>
   </data>
+  <data name="NotifierWindow_Stopped" xml:space="preserve">
+    <value>{0} cancelled</value>
+  </data>
   <data name="NotifierWindow_Title" xml:space="preserve">
     <value>Notifications</value>
   </data>
