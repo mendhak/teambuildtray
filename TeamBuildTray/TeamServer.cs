@@ -304,7 +304,7 @@ namespace TeamBuildTray
 
         }
 
-        public void QueueBuild(string agentUri, string buildUri, string dropLocation)
+        public void QueueBuild(string agentUri, string buildUri)
         {
             BuildServiceSoapClient soapClient = new BuildServiceSoapClient(GetBinding(Protocol, "BuildServiceSoap"), GetBuildEndpointAddress());
 
@@ -312,8 +312,7 @@ namespace TeamBuildTray
             BuildRequest request = new BuildRequest
             {
                 BuildAgentUri = agentUri,
-                BuildDefinitionUri = buildUri,
-                DropLocation = dropLocation
+                BuildDefinitionUri = buildUri
             };
 
             soapClient.QueueBuild(request, QueueOptions.None);

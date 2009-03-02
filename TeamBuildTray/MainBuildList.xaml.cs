@@ -653,8 +653,7 @@ namespace TeamBuildTray
                         if (server.GetDefinitionByUri(detail.BuildDefinitionUri) != null)
                         {
                             //extract the drop location
-                            string dropLocation = detail.DropLocation.Substring(0, detail.DropLocation.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase));
-                            server.QueueBuild(detail.BuildAgentUri, detail.BuildDefinitionUri, dropLocation);
+                            server.QueueBuild(detail.BuildAgentUri, detail.BuildDefinitionUri);
                             break;
                         }
                     }
