@@ -249,7 +249,6 @@ namespace TeamBuildTray
                     foreach (var project in projectList)
                     {
                         CheckBox checkBox = new CheckBox();
-                        checkBox.Name = "CheckBox_" + project.Name;
                         checkBox.Content = project.Name;
                         ListBoxProjects.Items.Add(checkBox);
                     }
