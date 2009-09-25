@@ -400,17 +400,28 @@ namespace TeamBuildTray
                             {
                                 if (item.BuildDefinitionUri == build.BuildDefinitionUri)
                                 {
-                                    message.BuildStatus = item.Status == BuildStatus.Failed
-                                                              ? IconColour.Red
-                                                              : IconColour.Green;
-                                    message.Message = item.Status == BuildStatus.Failed
-                                                          ? String.Format(CultureInfo.CurrentUICulture,
-                                                                          ResourcesMain.NotifierWindow_FailedBuild,
-                                                                          build.RequestedFor, buildName)
-                                                          :
-                                                              String.Format(CultureInfo.CurrentUICulture,
+                                    switch (item.Status)
+                                    {
+                                        case BuildStatus.Succeeded:
+                                            message.BuildStatus = IconColour.Green;
+                                            message.Message = String.Format(CultureInfo.CurrentUICulture,
                                                                             ResourcesMain.NotifierWindow_BuildPassed,
                                                                             buildName);
+                                            break;
+                                        case BuildStatus.PartiallySucceeded:
+                                            message.BuildStatus = IconColour.Red;
+                                            message.Message = String.Format(CultureInfo.CurrentUICulture,
+                                ResourcesMain.NotifierWindow_BuildPartial,
+                                buildName);
+                                            break;
+                                        default:
+                                            message.BuildStatus = IconColour.Red;
+                                            message.Message = String.Format(CultureInfo.CurrentUICulture,
+                                                                            ResourcesMain.NotifierWindow_FailedBuild,
+                                                                            build.RequestedFor, buildName);
+                                            break;
+                                    }
+ 
                                     message.HyperlinkUri = new Uri(item.LogLocation);
                                     mainIconColour = message.BuildStatus;
                                     iconChanged = true;

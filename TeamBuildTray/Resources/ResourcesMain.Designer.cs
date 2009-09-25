@@ -88,6 +88,15 @@ namespace TeamBuildTray.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} was only partially successful.
+        /// </summary>
+        internal static string NotifierWindow_BuildPartial {
+            get {
+                return ResourceManager.GetString("NotifierWindow_BuildPartial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} built successfully.
         /// </summary>
         internal static string NotifierWindow_BuildPassed {

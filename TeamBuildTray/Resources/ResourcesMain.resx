@@ -126,6 +126,9 @@
   <data name="MainWindow_Title" xml:space="preserve">
     <value>Team Build Tray</value>
   </data>
+  <data name="NotifierWindow_BuildPartial" xml:space="preserve">
+    <value>{0} was only partially successful</value>
+  </data>
   <data name="NotifierWindow_BuildPassed" xml:space="preserve">
     <value>{0} built successfully</value>
   </data>
