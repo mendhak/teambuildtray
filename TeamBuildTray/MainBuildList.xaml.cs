@@ -102,8 +102,8 @@ namespace TeamBuildTray
                 }
             }
 
-            StatusMessage initializing = new StatusMessage { Message = "Initializing..." };
-            MessageWindow.Show(initializing, 3000);
+            //StatusMessage initializing = new StatusMessage { Message = "Initializing..." };
+            //MessageWindow.Show(initializing, 3000);
 
             if (File.Exists(TeamServer.ServerConfigurationPath))
             {

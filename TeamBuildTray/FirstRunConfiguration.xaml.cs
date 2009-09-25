@@ -16,10 +16,6 @@ namespace TeamBuildTray
     /// </summary>
     public partial class FirstRunConfiguration
     {
-        private bool projectListCached;
-        private bool configurationChanged;
-
-
         /// <summary>
         /// Specifies whether this is first run configuration or a reconfiguration.
         /// </summary>
@@ -40,14 +36,21 @@ namespace TeamBuildTray
             Close();
         }
 
-
         private bool ValidEntries()
         {
+            return ValidEntries(true);
+        }
 
-            if (configurationChanged)
+        private bool ValidEntries(bool checkProjects)
+        {
+            if (checkProjects)
             {
-                MessageBox.Show("Please select a project name.", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return false;
+                if (!ProjectsSelected())
+                {
+                    MessageBox.Show("Please select at least one project.", ResourcesMain.MainWindow_Title,
+                                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return false;
+                }
             }
 
             int portNumber;
@@ -157,12 +160,6 @@ namespace TeamBuildTray
             }
         }
 
-
-        private void ServerValuesChanged(object sender, EventArgs e)
-        {
-            projectListCached = false;
-        }
-
         private void TextBoxPortNumber_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBoxPortNumber.SelectAll();
@@ -175,16 +172,11 @@ namespace TeamBuildTray
 
         private void FirstRunConfigurationWindow_Loaded(object sender, RoutedEventArgs e)
         {
-
-
             if (Reconfigure)
             {
                 List<TeamServer> teamServers = TeamServer.GetTeamServerList();
                 PopulateFields(teamServers);
             }
-
-            //Also, reset configurationChanged to false.
-            configurationChanged = false;
         }
 
 
@@ -222,37 +214,27 @@ namespace TeamBuildTray
             }
         }
 
-        private void CheckboxServerValuesChanged(object sender, RoutedEventArgs e)
-        {
-            configurationChanged = true;
-        }
-
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             //Reset  configurationChanged = false;
-            configurationChanged = false;
             ListBoxProjects.Items.Clear();
 
-            if (ValidEntries())
+            if (ValidEntries(false))
             {
                 string serverName = TextBoxServerName.Text;
                 int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
                 string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
 
-                if (!projectListCached)
-                {
-                    ListBoxProjects.Items.Clear();
-                    Cursor = Cursors.Wait;
-                    var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
-                    Cursor = Cursors.Arrow;
+                ListBoxProjects.Items.Clear();
+                Cursor = Cursors.Wait;
+                var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
+                Cursor = Cursors.Arrow;
 
-                    foreach (var project in projectList)
-                    {
-                        CheckBox checkBox = new CheckBox();
-                        checkBox.Content = project.Name;
-                        ListBoxProjects.Items.Add(checkBox);
-                    }
-                    projectListCached = true;
+                foreach (var project in projectList)
+                {
+                    CheckBox checkBox = new CheckBox();
+                    checkBox.Content = project.Name;
+                    ListBoxProjects.Items.Add(checkBox);
                 }
             }
         }
