@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using TeamBuildTray.Resources;
+using System.Windows.Controls;
 
 namespace TeamBuildTray
 {
@@ -79,12 +80,25 @@ namespace TeamBuildTray
             return true;
         }
 
+        private bool ProjectsSelected()
+        {
+            foreach (CheckBox checkBox in ListBoxProjects.Items)
+            {
+                if ((checkBox.IsChecked.HasValue) && (checkBox.IsChecked.Value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
 
             bool validated = ValidEntries();
 
-            if (validated && (ComboBoxProjects.SelectedValue != null))
+            if (validated && (ProjectsSelected()))
             {
                 try
                 {
@@ -94,7 +108,13 @@ namespace TeamBuildTray
                     string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
 
                     Collection<TeamProject> projects = new Collection<TeamProject>();
-                    projects.Add(new TeamProject { ProjectName = ComboBoxProjects.SelectedValue.ToString() });
+                    foreach (CheckBox checkBox in ListBoxProjects.Items)
+                    {
+                        if ((checkBox.IsChecked.HasValue) && (checkBox.IsChecked.Value))
+                        {
+                            projects.Add(new TeamProject { ProjectName = checkBox.Content.ToString() });
+                        }
+                    }
 
                     //Save the server list
                     List<TeamServer> servers = new List<TeamServer>
@@ -121,7 +141,7 @@ namespace TeamBuildTray
             else
             {
                 //Combobox validation needs to occur in the save event, not in validate. Here it is:
-                if (validated && ComboBoxProjects.SelectedValue == null)
+                if (validated && (ProjectsSelected()))
                 {
                     MessageBox.Show("Please select a project name", ResourcesMain.MainWindow_Title, MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
@@ -136,37 +156,6 @@ namespace TeamBuildTray
                 DragMove();
             }
         }
-
-        private void ComboBoxProjects_DropDownOpened(object sender, EventArgs e)
-        {
-            //Reset  configurationChanged = false;
-            configurationChanged = false;
-            ComboBoxProjects.Items.Clear();
-
-            if (ValidEntries())
-            {
-
-                string serverName = TextBoxServerName.Text;
-                int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
-                string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
-
-                if (!projectListCached)
-                {
-                    ComboBoxProjects.Items.Clear();
-                    Cursor = Cursors.Wait;
-                    var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
-                    Cursor = Cursors.Arrow;
-
-                    foreach (var project in projectList)
-                    {
-                        ComboBoxProjects.Items.Add(project.Name);
-                    }
-                    projectListCached = true;
-                }
-            }
-        }
-
-
 
 
         private void ServerValuesChanged(object sender, EventArgs e)
@@ -220,8 +209,14 @@ namespace TeamBuildTray
                 }
 
                 //Manually add the project name to the combobox.
-                ComboBoxProjects.Items.Add(currentTeamServer.Projects[0].ProjectName);
-                ComboBoxProjects.Text = currentTeamServer.Projects[0].ProjectName;
+                foreach (var project in currentTeamServer.Projects)
+                {
+                    ListBoxProjects.Items.Add(new CheckBox
+                                                  {
+                                                      Content = project.ProjectName,
+                                                      IsChecked = true
+                                                  });
+                }
 
                 LabelWindowTitle.Content = "Change Team Build Server";
             }
@@ -230,6 +225,37 @@ namespace TeamBuildTray
         private void CheckboxServerValuesChanged(object sender, RoutedEventArgs e)
         {
             configurationChanged = true;
+        }
+
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            //Reset  configurationChanged = false;
+            configurationChanged = false;
+            ListBoxProjects.Items.Clear();
+
+            if (ValidEntries())
+            {
+                string serverName = TextBoxServerName.Text;
+                int portNumber = Int32.Parse(TextBoxPortNumber.Text, CultureInfo.InvariantCulture);
+                string protocol = (RadioButtonHttps.IsChecked.HasValue && RadioButtonHttps.IsChecked.Value) ? "https" : "http";
+
+                if (!projectListCached)
+                {
+                    ListBoxProjects.Items.Clear();
+                    Cursor = Cursors.Wait;
+                    var projectList = TeamServer.GetProjectList(protocol, serverName, portNumber);
+                    Cursor = Cursors.Arrow;
+
+                    foreach (var project in projectList)
+                    {
+                        CheckBox checkBox = new CheckBox();
+                        checkBox.Name = "CheckBox_" + project.Name;
+                        checkBox.Content = project.Name;
+                        ListBoxProjects.Items.Add(checkBox);
+                    }
+                    projectListCached = true;
+                }
+            }
         }
 
 

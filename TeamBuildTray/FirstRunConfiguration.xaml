@@ -1,18 +1,19 @@
 ﻿<Window x:Class="TeamBuildTray.FirstRunConfiguration"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Add a Team Foundation Server" Height="210" Width="323" x:Name="FirstRunConfigurationWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" AllowsTransparency="True" ShowInTaskbar="True" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" Loaded="FirstRunConfigurationWindow_Loaded">
-	<Border Width="Auto" Height="Auto" Background="{DynamicResource BrushMainGradient}" CornerRadius="5,5,5,5" MouseDown="Border_MouseDown" d:IsLocked="True">
+    Title="Add a Team Foundation Server" Height="345" Width="323" x:Name="FirstRunConfigurationWindow" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" AllowsTransparency="True" ShowInTaskbar="True" Background="{x:Null}" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" Loaded="FirstRunConfigurationWindow_Loaded">
+	<Border Width="Auto" Height="Auto" Background="{DynamicResource BrushMainGradient}" CornerRadius="5,5,5,5" MouseDown="Border_MouseDown" BorderBrush="White" BorderThickness="1">
 		<Grid Height="Auto" Width="Auto">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
+				<RowDefinition/>
 				<RowDefinition Height="28"/>
 				<RowDefinition Height="28"/>
 				<RowDefinition Height="28"/>
 				<RowDefinition Height="28"/>
-				<RowDefinition Height="28"/>
-				<RowDefinition Height="11"/>
-				<RowDefinition Height="34"/>
+				<RowDefinition Height="32"/>
+				<RowDefinition Height="134"/>
+				<RowDefinition Height="7"/>
+				<RowDefinition Height="35"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.211*"/>
@@ -20,10 +21,10 @@
 				<ColumnDefinition Width="0.266*"/>
 				<ColumnDefinition Width="0.257*"/>
 			</Grid.ColumnDefinitions>
-			<Label Margin="10,0,0,0" x:Name="LabelServerName" Content="Team Foundation Server name:" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFFFFFFF" Padding="0,0,0,0" Grid.ColumnSpan="3" Grid.Row="1"/>
+			<Label Margin="10,0,0,0" x:Name="LabelServerName" Content="Team Foundation Server name:" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFFFFFFF" Padding="0,0,0,0" Grid.ColumnSpan="2" Grid.Row="1"/>
 			<TextBox Margin="10,0,10,0" x:Name="TextBoxServerName" HorizontalAlignment="Stretch" VerticalAlignment="Center" TabIndex="0" Grid.ColumnSpan="4" Grid.Row="2" TextChanged="ServerValuesChanged" GotFocus="TextBoxServerName_GotFocus" />
 			<Label x:Name="LabelPortNumber" Content="Port:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#FFFFFFFF" Grid.Row="3"/>
-			<TextBox x:Name="TextBoxPortNumber" Text="8080" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" TabIndex="1" Grid.Column="1" Grid.Row="3" d:LayoutOverrides="Height" TextChanged="ServerValuesChanged" GotFocus="TextBoxPortNumber_GotFocus"/>
+			<TextBox x:Name="TextBoxPortNumber" Text="8080" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" TabIndex="1" Grid.Column="1" Grid.Row="3" TextChanged="ServerValuesChanged" GotFocus="TextBoxPortNumber_GotFocus"/>
 			<Label x:Name="LabelProtocol" Height="Auto" VerticalAlignment="Center" Content="Protocol:" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="#FFFFFFFF" Grid.Row="4"/>
             <RadioButton x:Name="RadioButtonHttp" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="Black" TabIndex="2" Grid.Column="1" Grid.Row="4" IsChecked="True" Unchecked="ServerValuesChanged" Checked="CheckboxServerValuesChanged">
                 <Label Foreground="#FFFFFF">http</Label>
@@ -31,13 +32,14 @@
             <RadioButton Margin="10,0,11.25,2.775" x:Name="RadioButtonHttps" Foreground="Black" TabIndex="3" Grid.Column="2" Grid.Row="4" d:LayoutOverrides="Width" Unchecked="ServerValuesChanged" Checked="CheckboxServerValuesChanged">
             <Label Foreground="#FFFFFF" VerticalAlignment="Center">https</Label>
             </RadioButton>
-			<Button x:Name="ButtonSave" Click="ButtonSave_Click" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" TabIndex="5" Grid.Column="2" Grid.Row="7" IsDefault="True"/>
-			<Button x:Name="ButtonCancel" Click="ButtonCancel_Click" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Width="74.999" TabIndex="6" Grid.Column="3" Grid.Row="7" IsCancel="True"/>
-			<Border HorizontalAlignment="Left" Margin="-151,-9.5,0,-14.5" Width="43" Grid.Row="2"/>
+			<Button x:Name="ButtonSave" Click="ButtonSave_Click" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" TabIndex="5" Grid.Column="2" Grid.Row="8" IsDefault="True"/>
+			<Button x:Name="ButtonCancel" Click="ButtonCancel_Click" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Center" Width="74.999" TabIndex="6" Grid.Column="3" Grid.Row="8" IsCancel="True"/>
+			<Border HorizontalAlignment="Left" Margin="-151,-9.5,0,13.5" Width="43" Grid.Row="2" Grid.RowSpan="2"/>
 			<Border VerticalAlignment="Stretch" Height="Auto" Background="#55000000" CornerRadius="5,5,5,5" Grid.ColumnSpan="4"/>
 			<Label Name="LabelWindowTitle" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Content="Add Team Build Server" FontWeight="Bold" Foreground="#FFFFFFFF" Grid.ColumnSpan="4"/>
-			<Label HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Content="Project:" Background="#00FFFFFF" Foreground="#FFFFFFFF" Grid.Row="5"/>
-			<ComboBox IsSynchronizedWithCurrentItem="True" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" VerticalAlignment="Center" Margin="10,0,10,0" x:Name="ComboBoxProjects" DropDownOpened="ComboBoxProjects_DropDownOpened"/>
+			<Label HorizontalAlignment="Left" Margin="10,0,0,8.723" Content="Project:" Background="#00FFFFFF" Foreground="#FFFFFFFF" Grid.Row="5" d:LayoutOverrides="Height"/>
+			<ListBox x:Name="ListBoxProjects" Margin="10,8" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="6"/>
+			<Button Content="Load project list" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Center" Click="Button_Click" d:LayoutOverrides="Height, GridBox" VerticalAlignment="Center"/>
 		</Grid>
 	</Border>
 </Window>

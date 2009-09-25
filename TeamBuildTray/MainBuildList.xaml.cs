@@ -62,7 +62,7 @@ namespace TeamBuildTray
             ButtonConfigure.ToolTip = ResourcesMain.MainWindow_ConfigureTooltip;
             ButtonClose.ToolTip = ResourcesMain.MainWindow_CloseTooltip;
 
-            LoadConfiguration();
+            LoadConfiguration(false);
         }
 
 
@@ -82,12 +82,28 @@ namespace TeamBuildTray
             }
         }
 
-        private void LoadConfiguration()
+        private void LoadConfiguration(bool reconfigure)
         {
+            if (reconfigure)
+            {
+                buildUpdates.Clear();
+                buildContent.Clear();
+                lastStatusMessage = new StatusMessage { Message = "" };
+                buildIdsAlertedInProgress.Clear();
+                buildIdUris.Clear();
+                buildIdsAlertedQueued.Clear();
+                buildIdsAlertedDone.Clear();
+                currentIconColour = IconColour.Grey;
+                statusMessages.Clear();
+                buildContentView.Clear();
+                foreach (var server in servers)
+                {
+                    server.Dispose();
+                }
+            }
 
             StatusMessage initializing = new StatusMessage { Message = "Initializing..." };
             MessageWindow.Show(initializing, 3000);
-
 
             if (File.Exists(TeamServer.ServerConfigurationPath))
             {
@@ -113,16 +129,22 @@ namespace TeamBuildTray
             }
 
 
-
             //Add version as menu item
-            MenuItem versionMenuItem = new MenuItem { Header = "Version : " + Assembly.GetExecutingAssembly().GetName().Version };
-            NotifyIconMainIcon.ContextMenu.Items.Insert(0, versionMenuItem);
-            NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
+            if (!reconfigure)
+            {
+                MenuItem versionMenuItem = new MenuItem
+                                               {
+                                                   Header =
+                                                       "Version : " + Assembly.GetExecutingAssembly().GetName().Version
+                                               };
+                NotifyIconMainIcon.ContextMenu.Items.Insert(0, versionMenuItem);
+                NotifyIconMainIcon.ContextMenu.Items.Insert(1, new Separator());
 
-            //Add Reconfigure option into menu
-            MenuItem reconfigureMenuItem = new MenuItem { Header = "Change Servers" };
-            reconfigureMenuItem.Click += reconfigureMenuItem_Click;
-            NotifyIconMainIcon.ContextMenu.Items.Insert(2, reconfigureMenuItem);
+                //Add Reconfigure option into menu
+                MenuItem reconfigureMenuItem = new MenuItem { Header = "Change Servers" };
+                reconfigureMenuItem.Click += reconfigureMenuItem_Click;
+                NotifyIconMainIcon.ContextMenu.Items.Insert(2, reconfigureMenuItem);
+            }
 
             //Attach to server events
             foreach (TeamServer server in servers)
@@ -136,12 +158,15 @@ namespace TeamBuildTray
             InitializeServers();
         }
 
-        private static void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
+        private void reconfigureMenuItem_Click(object sender, RoutedEventArgs e)
         {
             FirstRunConfiguration firstRun = new FirstRunConfiguration { Reconfigure = true };
-            firstRun.ShowDialog();
-            //Not worried about return value since this is a reconfiguration rather than first run configuration
+            bool? result = firstRun.ShowDialog();
 
+            if ((result.HasValue) && (result.Value))
+            {
+                LoadConfiguration(true);
+            }
         }
 
         /// <summary>
@@ -167,11 +192,8 @@ namespace TeamBuildTray
         /// <returns></returns>
         private static List<TeamServer> GetServersFromConfigurationFile()
         {
-
             return TeamServer.GetTeamServerList();
-
         }
-
 
         private static void LoadHiddenBuilds()
         {
